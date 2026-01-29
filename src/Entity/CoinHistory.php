@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CoinHistoryRepository::class)]
+#[ORM\UniqueConstraint(name: "unique_coin_date", columns: ["coin_id", "date"])]
 class CoinHistory
 {
     #[ORM\Id]

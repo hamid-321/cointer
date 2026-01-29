@@ -61,17 +61,30 @@ class PriceUpdater
             ]);
 
             $data = $response->toArray();
+            $uniquePrices = [];
 
             foreach ($data['prices'] as $pricePoint) {
+                $date = (new \DateTimeImmutable())->setTimestamp((int)($pricePoint[0] / 1000));
+                $dateKey = $date->format('Y-m-d');
+                $uniquePrices[$dateKey] = ['price' => $pricePoint[1], 'date' => $date];
+            }
+
+            foreach ($uniquePrices as $point) {
                 $history = new \App\Entity\CoinHistory();
                 $history->setCoin($coin);
-                $history->setPrice($pricePoint[1]);
-                $history->setDate((new \DateTimeImmutable())->setTimestamp((int)($pricePoint[0] / 1000)));
+                $history->setPrice($point['price']);
+                $history->setDate($point['date']);
                 $this->em->persist($history);
             }
-            
-            $this->em->flush();
-            sleep(2);
+
+            try {
+                $this->em->flush();
+            } 
+            catch (\Exception $e) {
+                $this->em->clear(); 
+            }
+    
+            sleep(2); 
         }
     }
 }
