@@ -16,7 +16,7 @@ class PriceUpdater
 
     public function updateAllPrices(): void
     {
-        // fetch data for the 5 coins 
+        // fetch data for the 10 coins 
         $coinIds = 'bitcoin,ethereum,tether,binancecoin,ripple,usd-coin,solana,tron,staked-ether,dogecoin';
         
         $response = $this->client->request('GET', 'https://api.coingecko.com/api/v3/coins/markets', [
@@ -40,5 +40,38 @@ class PriceUpdater
         }
 
         $this->em->flush();
+    }
+
+    public function backfillYearlyHistory(): void
+    {
+        // fetch data for the 10 coins 
+        $coinIds = ['bitcoin', 'ethereum', 'tether', 'binancecoin', 'ripple', 'usd-coin', 'solana', 'tron', 'staked-ether', 'dogecoin'];
+        
+        foreach ($coinIds as $id) {
+            $coin = $this->coinRepository->findOneBy(['coin_gecko_id' => $id]);
+            if (!$coin) continue;
+
+            $response = $this->client->request('GET', "https://api.coingecko.com/api/v3/coins/$id/market_chart", [
+                'query' => [
+                    'vs_currency' => 'usd',
+                    'days' => '365',
+                    'interval' => 'daily',
+                    'x_cg_demo_api_key' => $this->coingeckoApiKey
+                ]
+            ]);
+
+            $data = $response->toArray();
+
+            foreach ($data['prices'] as $pricePoint) {
+                $history = new \App\Entity\CoinHistory();
+                $history->setCoin($coin);
+                $history->setPrice($pricePoint[1]);
+                $history->setDate((new \DateTimeImmutable())->setTimestamp((int)($pricePoint[0] / 1000)));
+                $this->em->persist($history);
+            }
+            
+            $this->em->flush();
+            sleep(2);
+        }
     }
 }
