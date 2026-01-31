@@ -1,50 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Coin{% endblock %}
+{% block title %}{{ coin.name }}{% endblock %}
 
 {% block body %}
-    <h1>Coin</h1>
+<div class="min-h-screen bg-primary">
+    <!-- Navigation -->
+    {% include 'components/_navbar.html.twig' %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ coin.id }}</td>
-            </tr>
-            <tr>
-                <th>Coin_gecko_id</th>
-                <td>{{ coin.coinGeckoId }}</td>
-            </tr>
-            <tr>
-                <th>Symbol</th>
-                <td>{{ coin.symbol }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ coin.name }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ coin.price }}</td>
-            </tr>
-            <tr>
-                <th>Market_cap</th>
-                <td>{{ coin.marketCap }}</td>
-            </tr>
-            <tr>
-                <th>Change_24h</th>
-                <td>{{ coin.change24h }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ coin.updatedAt ? coin.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Main Content -->
+    <main class="px-4 pt-2 pb-6 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Back Link -->
+            <a href="{{ path('app_coin_index') }}" class="inline-flex items-center text-gray-400 hover:text-white mb-4 transition-colors">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to list
+            </a>
 
-    <a href="{{ path('app_coin_index') }}">back to list</a>
+            <!-- Coin Header Card -->
+            <div class="rounded-2xl p-6 bg-card mb-4">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">{{ coin.name }}</h1>
+                        <span class="text-gray-400 uppercase">{{ coin.symbol }}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold text-white">{{ coin.price|format_price }}</div>
+                        {% set change = coin.change24h ?? 0 %}
+                        <span class="{% if change >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                            {% if change >= 0 %}+{% endif %}{{ change|number_format(2) }}% (24h)
+                        </span>
+                    </div>
+                </div>
+            </div>
 
-    <a href="{{ path('app_coin_edit', {'id': coin.id}) }}">edit</a>
+            <!-- Coin Details Card -->
+            <div class="rounded-2xl p-6 bg-card">
+                <h2 class="text-xl font-semibold text-white mb-4">Details</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between py-3 border-b border-primary">
+                        <span class="text-gray-400">Market Cap</span>
+                        <span class="text-white">{{ coin.marketCap|format_market_cap }}</span>
+                    </div>
+                    <div class="flex justify-between py-3 border-b border-primary">
+                        <span class="text-gray-400">24h Change</span>
+                        {% set change = coin.change24h ?? 0 %}
+                        <span class="{% if change >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                            {% if change >= 0 %}+{% endif %}{{ change|number_format(2) }}%
+                        </span>
+                    </div>
+                    <div class="flex justify-between py-3 border-b border-primary">
+                        <span class="text-gray-400">Last Updated</span>
+                        <span class="text-white">{{ coin.updatedAt ? coin.updatedAt|date('M d, Y H:i') : 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between py-3">
+                        <span class="text-gray-400">CoinGecko ID</span>
+                        <span class="text-white">{{ coin.coinGeckoId }}</span>
+                    </div>
+                </div>
+            </div>
 
-    {{ include('coin/_delete_form.html.twig') }}
+        </div>
+    </main>
+</div>
 {% endblock %}

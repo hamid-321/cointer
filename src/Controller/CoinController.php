@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Coin;
 use App\Form\CoinType;
 use App\Repository\CoinRepository;
+use App\Service\LastUpdateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +15,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/coin')]
 final class CoinController extends AbstractController
 {
+    public function __construct(
+        private readonly LastUpdateService $lastUpdateService
+    ) {}
+
     #[Route(name: 'app_coin_index', methods: ['GET'])]
     public function index(CoinRepository $coinRepository): Response
     {
+        $coins = $coinRepository->findAllOrderedByMarketCap();
+        
+        // Get last updated time from the first coin (all coins update together)
+        $lastUpdated = !empty($coins) ? $this->lastUpdateService->getTimeAgo($coins[0]->getUpdatedAt()) : 'Never';
+
         return $this->render('coin/index.html.twig', [
-            'coins' => $coinRepository->findAll(),
+            'coins' => $coins,
+            'lastUpdated' => $lastUpdated,
         ]);
     }
 
@@ -68,7 +79,7 @@ final class CoinController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_coin_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_coin_delete', methods: ['POST'])]
     public function delete(Request $request, Coin $coin, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$coin->getId(), $request->getPayload()->getString('_token'))) {

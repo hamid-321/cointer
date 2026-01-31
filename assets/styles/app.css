@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+:root {
+    --color-bg-primary: #0E0F12;
+    --color-bg-card: #222632;   
+    --color-bg-hover: #2a2f3d;
+    --color-accent: #BF00FF;
+}
+
+/* Custom utility classes using CSS variables */
+.bg-primary { background-color: var(--color-bg-primary); }
+.bg-card { background-color: var(--color-bg-card); }
+.bg-button { background-color: var(--color-bg-card); }
+.bg-card-hover:hover { background-color: var(--color-bg-hover); }
+.bg-accent { background-color: var(--color-accent); }
+.border-primary { border-color: var(--color-bg-primary); }
+
 body {
-    background-color: skyblue;
+    background-color: var(--color-bg-primary);
 }
