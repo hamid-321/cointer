@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coin{% endblock %}
+
+{% block body %}
+    <h1>Coin</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ coin.id }}</td>
+            </tr>
+            <tr>
+                <th>Coin_gecko_id</th>
+                <td>{{ coin.coinGeckoId }}</td>
+            </tr>
+            <tr>
+                <th>Symbol</th>
+                <td>{{ coin.symbol }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ coin.name }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ coin.price }}</td>
+            </tr>
+            <tr>
+                <th>Market_cap</th>
+                <td>{{ coin.marketCap }}</td>
+            </tr>
+            <tr>
+                <th>Change_24h</th>
+                <td>{{ coin.change24h }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ coin.updatedAt ? coin.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_coin_index') }}">back to list</a>
+
+    <a href="{{ path('app_coin_edit', {'id': coin.id}) }}">edit</a>
+
+    {{ include('coin/_delete_form.html.twig') }}
+{% endblock %}
