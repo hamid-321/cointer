@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Coin;
 use App\Form\CoinType;
 use App\Repository\CoinRepository;
+use App\Service\ChartService;
 use App\Service\LastUpdateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CoinController extends AbstractController
 {
     public function __construct(
-        private readonly LastUpdateService $lastUpdateService
+        private readonly LastUpdateService $lastUpdateService,
+        private readonly ChartService $chartService
     ) {}
 
     #[Route(name: 'app_coin_index', methods: ['GET'])]
@@ -56,8 +58,11 @@ final class CoinController extends AbstractController
     #[Route('/{id}', name: 'app_coin_show', methods: ['GET'])]
     public function show(Coin $coin): Response
     {
+        $chart = $this->chartService->buildPriceHistoryChart($coin);
+
         return $this->render('coin/show.html.twig', [
             'coin' => $coin,
+            'chart' => $chart,
         ]);
     }
 

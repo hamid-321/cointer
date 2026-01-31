@@ -5,13 +5,15 @@ namespace App\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class AppExtension extends AbstractExtension
+class DataFormatter extends AbstractExtension
 {
     public function getFilters(): array
     {
         return [
             new TwigFilter('format_market_cap', [$this, 'formatMarketCap']),
             new TwigFilter('format_price', [$this, 'formatPrice']),
+            new TwigFilter('format_currency', [$this, 'formatCurrency']),
+            new TwigFilter('format_date', [$this, 'formatDate']),
         ];
     }
 
@@ -54,5 +56,33 @@ class AppExtension extends AbstractExtension
         }
 
         return '$' . number_format($value, 2);
+    }
+
+    /**
+     * Format currency with full value (no truncation)
+     */
+    public function formatCurrency(?float $value, int $decimals = 0): string
+    {
+        if ($value === null) {
+            return '$0';
+        }
+
+        return '$' . number_format($value, $decimals, '.', ',');
+    }
+
+    /**
+     * Format date/datetime in a consistent way
+     */
+    public function formatDate(?\DateTimeInterface $date, bool $includeTime = true): string
+    {
+        if ($date === null) {
+            return 'N/A';
+        }
+
+        if ($includeTime) {
+            return $date->format('M d, Y H:i');
+        }
+
+        return $date->format('M d, Y');
     }
 }
