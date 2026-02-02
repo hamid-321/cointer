@@ -7,10 +7,18 @@
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-2">
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Home</a>
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Portfolio</a>
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Profile</a>
-            <a href="#" class="px-4 py-2 text-white rounded-lg transition-colors bg-accent">Log out</a>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {# User is logged in #}
+                <a href="{{ path('app_coin_index') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Home</a>
+                <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Portfolio</a>
+                <a href="{{ path('app_logout') }}" class="px-4 py-2 text-white rounded-lg transition-colors bg-accent hover:opacity-90">Logout</a>
+            {% else %}
+                {# User is not logged in #}
+                <a href="{{ path('app_coin_index') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Home</a>
+                <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Portfolio</a>
+                <a href="{{ path('app_login') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button">Login</a>
+                <a href="{{ path('app_register') }}" class="px-4 py-2 text-white rounded-lg transition-colors bg-accent">Sign Up</a>
+            {% endif %}
         </div>
 
         <!-- Mobile Menu Button -->
@@ -24,10 +32,18 @@
     <!-- Mobile Navigation -->
     <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
         <div class="flex flex-col gap-2">
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors">Home</a>
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors">Portfolio</a>
-            <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors">Profile</a>
-            <a href="#" class="px-4 py-2 text-white rounded-lg transition-colors text-center bg-accent">Log out</a>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {# User is logged in #}
+                <a href="{{ path('app_coin_index') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button text-center">Home</a>
+                <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button text-center">Portfolio</a>
+                <a href="{{ path('app_logout') }}" class="px-4 py-2 text-white rounded-lg transition-colors text-center bg-accent hover:opacity-90">Logout</a>
+            {% else %}
+                {# User is not logged in #}
+                <a href="{{ path('app_coin_index') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button text-center">Home</a>
+                <a href="#" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button text-center">Portfolio</a>
+                <a href="{{ path('app_login') }}" class="px-4 py-2 text-white hover:bg-card rounded-lg transition-colors bg-button text-center">Login</a>
+                <a href="{{ path('app_register') }}" class="px-4 py-2 text-white rounded-lg transition-colors text-center bg-accent hover:opacity-90">Sign Up</a>
+            {% endif %}
         </div>
     </div>
 </nav>

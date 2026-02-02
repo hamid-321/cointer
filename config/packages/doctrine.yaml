@@ -8,11 +8,10 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
-
-        idle_connection_ttl: 300
-
+        
         options:
-            !php/const PDO::ATTR_TIMEOUT: 5
+
+            !php/const PDO::MYSQL_ATTR_INIT_COMMAND: 'SET session wait_timeout=3600'
 
     orm:
         auto_generate_proxy_classes: true
