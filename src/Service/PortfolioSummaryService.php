@@ -68,7 +68,8 @@ class PortfolioSummaryService
         $totalCost = 0.0;
         $portfolioSummaries = [];
 
-        foreach ($portfolios as $portfolio) {
+        foreach ($portfolios as $portfolio)
+        {
             $summary = $this->getPortfolioSummary($portfolio);
             $portfolioSummaries[$portfolio->getId()] = $summary;
             $totalValue += $summary['totalValue'];
@@ -80,9 +81,12 @@ class PortfolioSummaryService
 
         // Weighted 24h change across all portfolios
         $change24h = 0.0;
-        if ($totalValue > 0) {
-            foreach ($portfolioSummaries as $summary) {
-                if ($summary['totalValue'] > 0) {
+        if ($totalValue > 0)
+        {
+            foreach ($portfolioSummaries as $summary)
+            {
+                if ($summary['totalValue'] > 0)
+                {
                     $weight = $summary['totalValue'] / $totalValue;
                     $change24h += $summary['change24h'] * $weight;
                 }

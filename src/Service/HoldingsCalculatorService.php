@@ -15,7 +15,8 @@ class HoldingsCalculatorService
 
         foreach ($transactions as $transaction)
         {
-            if ($coin === null) {
+            if ($coin === null)
+            {
                 $coin = $transaction->getCoin();
             }
 

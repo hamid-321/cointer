@@ -22,7 +22,6 @@ class TransactionType extends AbstractType
                 'choices' => [
                     'Buy' => 'buy',
                     'Sell' => 'sell',
-                    'Transfer' => 'transfer',
                 ],
             ])
             ->add('coin', EntityType::class, [
