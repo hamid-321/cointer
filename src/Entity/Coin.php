@@ -43,9 +43,16 @@ class Coin
     #[ORM\OneToMany(targetEntity: CoinHistory::class, mappedBy: 'coin')]
     private Collection $coin_history;
 
+    /**
+     * @var Collection<int, Transaction>
+     */
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'coin')]
+    private Collection $transactions;
+
     public function __construct()
     {
         $this->coin_history = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +168,36 @@ class Coin
             // set the owning side to null (unless already changed)
             if ($coinHistory->getCoin() === $this) {
                 $coinHistory->setCoin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setCoin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCoin() === $this) {
+                $transaction->setCoin(null);
             }
         }
 
