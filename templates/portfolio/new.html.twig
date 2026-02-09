@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Portfolio{% endblock %}
+
+{% block body %}
+    {% include 'components/_navbar.html.twig' %}
+
+    <div class="min-h-[calc(100vh-4rem)] bg-primary flex items-center justify-center px-4 py-4">
+        <div class="w-full max-w-sm">
+            <div class="bg-card shadow rounded-lg p-6 max-h-full overflow-auto">
+                <h1 class="text-2xl font-semibold text-white mb-6 text-center">Create Portfolio</h1>
+
+                {{ form_start(form, { attr: { class: 'space-y-5' } }) }}
+                    <div>
+                        <label for="{{ form.name.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Portfolio Name</label>
+                        {{ form_widget(form.name, {
+                            attr: {
+                                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                                placeholder: 'e.g. My Portfolio'
+                            }
+                        }) }}
+                        {% if form.name.vars.errors|length > 0 %}
+                            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                                {% for error in form.name.vars.errors %}
+                                    <span>{{ error.message }}</span><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="w-full inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-white font-medium shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent">
+                        Create Portfolio
+                    </button>
+                {{ form_end(form) }}
+
+                <p class="mt-6 text-center">
+                    <a href="{{ path('app_portfolio_index') }}" class="text-gray-400 text-sm hover:text-white transition-colors">Back to Portfolios</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

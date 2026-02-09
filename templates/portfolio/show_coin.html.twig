@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ coin.name }} - {{ portfolio.name }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-primary">
+    {% include 'components/_navbar.html.twig' %}
+
+    <main class="px-4 pt-2 pb-6 md:px-8">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Back Link -->
+            <div class="mb-4">
+                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">
+                    &larr; Back to {{ portfolio.name }}
+                </a>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+                <!-- Coin Value -->
+                <div class="bg-card rounded-2xl p-6">
+                    <h2 class="text-gray-400 text-sm font-medium mb-2">{{ coin.name }} Holdings Value</h2>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-white">{{ holding.currentValue|format_price }}</span>
+                        <span class="text-sm">
+                            <span class="text-gray-400">24h</span>
+                            <span class="ml-1 {% if holding.change24h >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                                {% if holding.change24h >= 0 %}+{% endif %}{{ holding.change24h|number_format(1) }}%
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Holdings -->
+                <div class="bg-card rounded-2xl p-6">
+                    <h2 class="text-gray-400 text-sm font-medium mb-2">Holdings</h2>
+                    <span class="text-3xl font-bold text-white">{{ holding.quantity }}</span>
+                </div>
+
+                <!-- Total Cost -->
+                <div class="bg-card rounded-2xl p-6">
+                    <h2 class="text-gray-400 text-sm font-medium mb-2">Total Cost</h2>
+                    <span class="text-3xl font-bold text-white">{{ holding.totalCost|format_price }}</span>
+                </div>
+
+                <!-- Avg Net Cost -->
+                <div class="bg-card rounded-2xl p-6">
+                    <h2 class="text-gray-400 text-sm font-medium mb-2">Avg Net Cost (Price Per Coin)</h2>
+                    <span class="text-3xl font-bold text-white">{{ holding.avgNetCost|format_price }}</span>
+                </div>
+
+                <!-- Profit and Loss -->
+                <div class="bg-card rounded-2xl p-6">
+                    <h2 class="text-gray-400 text-sm font-medium mb-2">Profit and Loss</h2>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold {% if holding.profitLoss >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                            {% if holding.profitLoss >= 0 %}+{% endif %}{{ holding.profitLoss|format_price }}
+                        </span>
+                        <span class="text-sm {% if holding.profitLossPercent >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                            {% if holding.profitLossPercent >= 0 %}+{% endif %}{{ holding.profitLossPercent|number_format(1) }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="bg-card rounded-2xl p-4 md:p-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <h2 class="text-xl font-semibold text-white">Transactions</h2>
+                    <a href="{{ path('app_transaction_new', {'id': portfolio.id}) }}" class="px-4 py-2 text-white rounded-lg transition-colors bg-accent hover:opacity-90 text-sm font-medium">
+                        Add Transaction
+                    </a>
+                </div>
+
+                {% if transactions|length > 0 %}
+                    <!-- Desktop Table -->
+                    <div class="hidden md:block">
+                        <!-- Table Header -->
+                        <div class="grid grid-cols-6 gap-4 px-4 pb-4 border-b border-primary">
+                            <div class="text-gray-400 text-sm font-medium">Type</div>
+                            <div class="text-gray-400 text-sm font-medium">Amount</div>
+                            <div class="text-gray-400 text-sm font-medium">Price</div>
+                            <div class="text-gray-400 text-sm font-medium">Value</div>
+                            <div class="text-gray-400 text-sm font-medium">Date</div>
+                            <div></div>
+                        </div>
+
+                        <!-- Table Rows -->
+                        {% for tx in transactions %}
+                            <div class="grid grid-cols-6 gap-4 px-4 py-4 items-center border-b border-primary">
+                                <div>
+                                    <span class="px-2 py-1 rounded text-xs font-medium 
+                                        {% if tx.type == 'buy' %}bg-green-500/20 text-green-400
+                                        {% elseif tx.type == 'sell' %}bg-red-500/20 text-red-400
+                                        {% else %}bg-blue-500/20 text-blue-400{% endif %}">
+                                        {{ tx.type|capitalize }}
+                                    </span>
+                                </div>
+                                <div class="text-white">{{ tx.quantity|format_quantity }}</div>
+                                <div class="text-white">{{ (tx.price / tx.quantity)|format_price }}</div>
+                                <div class="text-white">{{ tx.price|format_price }}</div>
+                                <div class="text-gray-400">{{ tx.createdAt|format_date(false) }}</div>
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': tx.id}) }}" class="px-2 py-1 text-xs font-medium text-gray-300 bg-gray-600 hover:bg-gray-500 rounded transition-colors">
+                                        Edit
+                                    </a>
+                                    <form method="post" action="{{ path('app_transaction_delete', {'id': portfolio.id, 'transactionId': tx.id}) }}" onsubmit="return confirm('Are you sure you want to delete this transaction?');" class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-transaction-' ~ tx.id) }}">
+                                        <button type="submit" class="px-2 py-1 text-xs font-medium text-red-400 bg-red-500/20 hover:bg-red-500/30 rounded transition-colors">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Mobile Table -->
+                    <div class="md:hidden">
+                        <!-- Mobile Header -->
+                        <div class="grid grid-cols-4 px-1 pb-2 border-b border-primary">
+                            <div class="text-gray-400 text-xs font-medium">Type</div>
+                            <div class="text-gray-400 text-xs font-medium text-right">Amount</div>
+                            <div class="text-gray-400 text-xs font-medium text-right">Price</div>
+                            <div></div>
+                        </div>
+
+                        {% for tx in transactions %}
+                            <div class="px-1 py-2 border-b border-primary">
+                                <div class="grid grid-cols-4 items-center">
+                                    <div>
+                                        <span class="px-2 py-1 rounded text-xs font-medium 
+                                            {% if tx.type == 'buy' %}bg-green-500/20 text-green-400
+                                            {% elseif tx.type == 'sell' %}bg-red-500/20 text-red-400
+                                            {% else %}bg-blue-500/20 text-blue-400{% endif %}">
+                                            {{ tx.type|capitalize }}
+                                        </span>
+                                    </div>
+                                    <div class="text-white text-sm text-right">{{ tx.quantity|format_quantity }}</div>
+                                    <div class="text-white text-sm text-right">{{ (tx.price / tx.quantity)|format_price }}</div>
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': tx.id}) }}" class="px-2 py-1 text-xs font-medium text-gray-300 bg-gray-600 hover:bg-gray-500 rounded transition-colors">
+                                            Edit
+                                        </a>
+                                        <form method="post" action="{{ path('app_transaction_delete', {'id': portfolio.id, 'transactionId': tx.id}) }}" onsubmit="return confirm('Delete this transaction?');" class="inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete-transaction-' ~ tx.id) }}">
+                                            <button type="submit" class="px-2 py-1 text-xs font-medium text-red-400 bg-red-500/20 hover:bg-red-500/30 rounded transition-colors">
+                                                Del
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="py-8 text-center text-gray-400">
+                        No transactions yet for {{ coin.name }}.
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
+</div>
+{% endblock %}

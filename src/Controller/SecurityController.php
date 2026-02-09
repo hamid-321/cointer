@@ -13,7 +13,8 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Redirect already logged-in users
-        if ($this->getUser()) {
+        if ($this->getUser()) 
+        {
             return $this->redirectToRoute('app_coin_index');
         }
 

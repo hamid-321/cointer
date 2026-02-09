@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Portfolio;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,18 @@ class PortfolioRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @return Portfolio[] Returns all portfolios for a given user
+     */
+    public function findAllByUser(User $user): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.created_at', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

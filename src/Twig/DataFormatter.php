@@ -13,6 +13,7 @@ class DataFormatter extends AbstractExtension
             new TwigFilter('format_market_cap', [$this, 'formatMarketCap']),
             new TwigFilter('format_price', [$this, 'formatPrice']),
             new TwigFilter('format_currency', [$this, 'formatCurrency']),
+            new TwigFilter('format_quantity', [$this, 'formatQuantity']),
             new TwigFilter('format_date', [$this, 'formatDate']),
         ];
     }
@@ -48,10 +49,12 @@ class DataFormatter extends AbstractExtension
             return '$0.00';
         }
 
-        // For very small values (< $1), show more decimals
-        if ($value < 0.01) {
+        $abs = abs($value);
+
+        // For very small values (< $0.01), show more decimals
+        if ($abs < 0.01) {
             return '$' . number_format($value, 6);
-        } elseif ($value < 1) {
+        } elseif ($abs < 1) {
             return '$' . number_format($value, 4);
         }
 
@@ -68,6 +71,21 @@ class DataFormatter extends AbstractExtension
         }
 
         return '$' . number_format($value, $decimals, '.', ',');
+    }
+
+    /**
+     * Format quantity, stripping unnecessary trailing zeros
+     */
+    public function formatQuantity(float|string|null $value): string
+    {
+        if ($value === null) {
+            return '0';
+        }
+
+        // Remove trailing zeros after decimal point
+        $formatted = rtrim(rtrim(number_format((float) $value, 8, '.', ','), '0'), '.');
+
+        return $formatted;
     }
 
     /**

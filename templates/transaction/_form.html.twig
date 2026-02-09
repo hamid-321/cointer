@@ -1,0 +1,89 @@
+{{ form_start(form, { attr: {
+    class: 'space-y-5',
+    'data-price-sync': '',
+    'data-quantity-id': form.quantity.vars.id,
+    'data-per-coin-id': form.pricePerCoin.vars.id,
+    'data-total-id': form.price.vars.id
+} }) }}
+    <div>
+        <label for="{{ form.type.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Type</label>
+        {{ form_widget(form.type, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent'
+            }
+        }) }}
+        {% if form.type.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.type.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="{{ form.coin.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Coin</label>
+        {{ form_widget(form.coin, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent'
+            }
+        }) }}
+        {% if form.coin.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.coin.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="{{ form.quantity.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Quantity</label>
+        {{ form_widget(form.quantity, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                placeholder: 'e.g. 0.5'
+            }
+        }) }}
+        {% if form.quantity.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.quantity.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="{{ form.pricePerCoin.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Price Per Coin (USD)</label>
+        {{ form_widget(form.pricePerCoin, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                placeholder: 'e.g. 95000.00'
+            }
+        }) }}
+    </div>
+
+    <div>
+        <label for="{{ form.price.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Total Cost (USD)</label>
+        {{ form_widget(form.price, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                placeholder: 'e.g. 47500.00'
+            }
+        }) }}
+        {% if form.price.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.price.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <p class="text-gray-500 text-xs -mt-2">Fill in either price per coin or total cost, the other will auto calculate.</p>
+
+    <button type="submit" class="w-full inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-white font-medium shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent">
+        {{ button_label }}
+    </button>
+{{ form_end(form) }}

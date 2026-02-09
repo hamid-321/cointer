@@ -29,7 +29,8 @@ class ChartService
         $labels = [];
         $prices = [];
         
-        foreach ($history as $record) {
+        foreach ($history as $record)
+        {
             $labels[] = $record->getDate()->format('M d, Y');
             $prices[] = (float) $record->getPrice();
         }

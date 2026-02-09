@@ -42,7 +42,8 @@ final class CoinController extends AbstractController
         $form = $this->createForm(CoinType::class, $coin);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $entityManager->persist($coin);
             $entityManager->flush();
 
@@ -72,7 +73,8 @@ final class CoinController extends AbstractController
         $form = $this->createForm(CoinType::class, $coin);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $entityManager->flush();
 
             return $this->redirectToRoute('app_coin_index', [], Response::HTTP_SEE_OTHER);
@@ -87,7 +89,8 @@ final class CoinController extends AbstractController
     #[Route('/{id}/delete', name: 'app_coin_delete', methods: ['POST'])]
     public function delete(Request $request, Coin $coin, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$coin->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$coin->getId(), $request->getPayload()->getString('_token')))
+        {
             $entityManager->remove($coin);
             $entityManager->flush();
         }
