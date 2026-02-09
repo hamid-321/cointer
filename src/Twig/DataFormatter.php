@@ -23,17 +23,25 @@ class DataFormatter extends AbstractExtension
      */
     public function formatMarketCap(?float $value): string
     {
-        if ($value === null || $value == 0) {
+        if ($value === null || $value == 0)
+        {
             return '$0.00';
         }
 
-        if ($value >= 1_000_000_000_000) {
+        if ($value >= 1_000_000_000_000)
+        {
             return '$' . number_format($value / 1_000_000_000_000, 2) . ' T';
-        } elseif ($value >= 1_000_000_000) {
+        }
+        elseif ($value >= 1_000_000_000)
+        {
             return '$' . number_format($value / 1_000_000_000, 2) . ' B';
-        } elseif ($value >= 1_000_000) {
+        }
+        elseif ($value >= 1_000_000)
+        {
             return '$' . number_format($value / 1_000_000, 2) . ' M';
-        } elseif ($value >= 1_000) {
+        }
+        elseif ($value >= 1_000)
+        {
             return '$' . number_format($value / 1_000, 2) . ' K';
         }
 
@@ -45,16 +53,24 @@ class DataFormatter extends AbstractExtension
      */
     public function formatPrice(?float $value): string
     {
-        if ($value === null) {
+        if ($value === null)
+        {
             return '$0.00';
         }
 
         $abs = abs($value);
-
+        
+        if ($abs == 0)
+        {
+            return '$0.00';
+        }
         // For very small values (< $0.01), show more decimals
-        if ($abs < 0.01) {
+        if ($abs < 0.01)
+        {
             return '$' . number_format($value, 6);
-        } elseif ($abs < 1) {
+        }
+        elseif ($abs < 1)
+        {
             return '$' . number_format($value, 4);
         }
 
@@ -66,7 +82,8 @@ class DataFormatter extends AbstractExtension
      */
     public function formatCurrency(?float $value, int $decimals = 0): string
     {
-        if ($value === null) {
+        if ($value === null)
+        {
             return '$0';
         }
 
@@ -78,7 +95,8 @@ class DataFormatter extends AbstractExtension
      */
     public function formatQuantity(float|string|null $value): string
     {
-        if ($value === null) {
+        if ($value === null)
+        {
             return '0';
         }
 
@@ -93,11 +111,13 @@ class DataFormatter extends AbstractExtension
      */
     public function formatDate(?\DateTimeInterface $date, bool $includeTime = true): string
     {
-        if ($date === null) {
+        if ($date === null)
+        {
             return 'N/A';
         }
 
-        if ($includeTime) {
+        if ($includeTime)
+        {
             return $date->format('M d, Y H:i');
         }
 
