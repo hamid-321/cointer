@@ -43,8 +43,30 @@ class PortfolioRepository extends ServiceEntityRepository
     //    }
 
     /**
-     * @return Portfolio[] Returns all portfolios for a given user
+     * Returns portfolios orders by value in desc order ready for pagination
      */
+    public function getPaginationQuery(User $user): \Doctrine\ORM\Query
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.transactions', 't')
+            ->leftJoin('t.coin', 'c')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->addSelect('SUM(
+                CASE
+                    WHEN t.type = \'buy\' THEN t.quantity 
+                    WHEN t.type = \'sell\' THEN -t.quantity 
+                    ELSE 0
+                END * c.price
+            ) as hidden total_value')
+            ->groupBy('p.id')
+            ->orderBy('total_value', 'DESC')
+            ->addorderBy('p.name', 'DESC')
+            ->getQuery()
+        ;
+    }
+
+
     public function findAllByUser(User $user): array
     {
         return $this->createQueryBuilder('p')

@@ -7,6 +7,7 @@ use App\Entity\Portfolio;
 use App\Form\PortfolioType;
 use App\Repository\PortfolioRepository;
 use App\Repository\TransactionRepository;
+use App\Service\ChartService;
 use App\Service\HoldingsCalculatorService;
 use App\Service\PortfolioSummaryService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,17 +23,27 @@ final class PortfolioController extends AbstractController
     public function __construct(
         private readonly PortfolioSummaryService $portfolioSummaryService,
         private readonly HoldingsCalculatorService $holdingsCalculator,
+        private readonly ChartService $chartService,
     ) {}
 
     #[Route('/portfolio', name: 'app_portfolio_index')]
     public function index(PortfolioRepository $portfolioRepository): Response
     {
-        $portfolios = $portfolioRepository->findAllByUser($this->getUser());
+        $portfolios = $portfolioRepository->getPaginationQuery($this->getUser());
+        $portfolios = $portfolios->getResult();
         $combinedSummary = $this->portfolioSummaryService->getCombinedSummary($portfolios);
+
+        $distributionChart = $this->chartService->buildDistributionChart(
+            $combinedSummary['distributionLabels'],
+            $combinedSummary['distributionData']
+        );
+        $distributionColors = $this->chartService->getColourPalette(\count($combinedSummary['distributionLabels']));
 
         return $this->render('portfolio/index.html.twig', [
             'portfolios' => $portfolios,
             'combined' => $combinedSummary,
+            'distributionChart' => $distributionChart,
+            'distributionColors' => $distributionColors,
         ]);
     }
 
@@ -45,9 +56,35 @@ final class PortfolioController extends AbstractController
 
         $summary = $this->portfolioSummaryService->getPortfolioSummary($portfolio);
 
+        $holdings = $summary['holdings'] ?? [];
+        
+        usort($holdings, function ($a, $b) 
+        {
+            return $b['currentValue'] <=> $a['currentValue']; // Highest value first
+        });
+
+        $sortedLabels = [];
+        $sortedData = [];
+
+        foreach ($holdings as $item) 
+        {
+            $sortedLabels[] = $item['coin']->getName();
+            $sortedData[] = $item['currentValue'];
+        }
+
+        $distributionChart = $this->chartService->buildDistributionChart(
+            $sortedLabels,
+            $sortedData
+        );
+
+        $distributionColors = $this->chartService->getColourPalette(\count($sortedLabels));
+
         return $this->render('portfolio/show.html.twig', [
             'portfolio' => $portfolio,
             'summary' => $summary,
+            'holdings' => $holdings,
+            'distributionChart' => $distributionChart,
+            'distributionColors' => $distributionColors,
         ]);
     }
 

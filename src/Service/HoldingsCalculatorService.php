@@ -44,7 +44,7 @@ class HoldingsCalculatorService
         // Average Net Cost = (Total Cost - Total Proceeds) / Holdings
         $avgNetCost = $netQuantity > 0 ? ($totalCostBought - $totalProceeds) / $netQuantity : 0.0;
         $currentValue = $netQuantity * $currentPrice;
-        $totalCost = $totalCostBought;
+        $totalCost = $totalCostBought - $totalProceeds;
         $netInvestment = $totalCostBought - $totalProceeds;
         $profitLoss = $currentValue - $netInvestment;
         $profitLossPercent = $netInvestment > 0 ? ($profitLoss / $netInvestment) * 100 : 0.0;

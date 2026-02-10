@@ -38,16 +38,20 @@ class PortfolioSummaryService
             }
         }
 
-        // Distribution percentages
+        $distributionLabels = [];
+        $distributionData = [];
         foreach ($holdings as $holding)
         {
             if ($holding['coin'] !== null && $totalValue > 0)
             {
+                $percent = ($holding['currentValue'] / $totalValue) * 100;
                 $distribution[] = [
                     'coin' => $holding['coin'],
                     'value' => $holding['currentValue'],
-                    'percent' => ($holding['currentValue'] / $totalValue) * 100,
+                    'percent' => $percent,
                 ];
+                $distributionLabels[] = $holding['coin']->getName();
+                $distributionData[] = round($percent, 1);
             }
         }
 
@@ -59,6 +63,8 @@ class PortfolioSummaryService
             'change24h' => $change24h,
             'holdings' => $holdings,
             'distribution' => $distribution,
+            'distributionLabels' => $distributionLabels,
+            'distributionData' => $distributionData,
         ];
     }
 
@@ -93,6 +99,16 @@ class PortfolioSummaryService
             }
         }
 
+        $distributionLabels = [];
+        $distributionData = [];
+        foreach ($portfolios as $portfolio)
+        {
+            $summary = $portfolioSummaries[$portfolio->getId()] ?? null;
+            $percent = ($totalValue > 0 && $summary) ? ($summary['totalValue'] / $totalValue * 100) : 0.0;
+            $distributionLabels[] = $portfolio->getName();
+            $distributionData[] = round($percent, 1);
+        }
+
         return [
             'totalValue' => $totalValue,
             'totalCost' => $totalCost,
@@ -100,6 +116,8 @@ class PortfolioSummaryService
             'profitLossPercent' => $profitLossPercent,
             'change24h' => $change24h,
             'portfolioSummaries' => $portfolioSummaries,
+            'distributionLabels' => $distributionLabels,
+            'distributionData' => $distributionData,
         ];
     }
 

@@ -42,7 +42,7 @@ class ChartService
             'datasets' => [
                 [
                     'label' => $coin->getName() . ' Price (USD)',
-                    'backgroundColor' => 'rgba(191, 0, 255, 0.2)',
+                    'backgroundColor' => '#BF00FF33',
                     'borderColor' => '#BF00FF',
                     'data' => $prices,
                     'fill' => true,
@@ -54,6 +54,85 @@ class ChartService
         ]);
 
         $chart->setOptions($this->getChartOptions());
+
+        return $chart;
+    }
+
+    public function getColourPalette(int $count): array
+    {
+        $palette = [
+            '#FF0000',
+            '#FF0080',
+            '#2CD42C',
+            '#FF8000',
+            '#00FF80',
+            '#0080FF',
+            '#80FF00',
+            '#00FFFF',
+            '#8000FF',
+            '#FFEEE7',
+        ];
+        $colors = [];
+        for ($i = 0; $i < $count; $i++) 
+        {
+            $colors[] = $palette[$i % \count($palette)];
+        }
+        return $colors;
+    }
+
+    public function buildDistributionChart(array $labels, array $data): Chart
+    {
+        $palette = [
+            '#FF0000',
+            '#FF0080',
+            '#2CD42C',
+            '#FF8000',
+            '#00FF80',
+            '#0080FF',
+            '#80FF00',
+            '#00FFFF',
+            '#8000FF',
+            '#FFEEE7',
+        ];
+
+        $backgroundColors = [];
+        foreach (array_keys($labels) as $i) 
+        {
+            $backgroundColors[] = $palette[$i % \count($palette)];
+        }
+
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_PIE);
+        $chart->setData([
+            'labels' => array_values($labels),
+            'datasets' => [
+                [
+                    'data' => array_values($data),
+                    'backgroundColor' => $backgroundColors,
+                    'borderColor' => '#222632',
+                    'borderWidth' => 2,
+                    'hoverOffset' => 4,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'responsive' => true,
+            'maintainAspectRatio' => false,
+            'plugins' => [
+                'legend' => [
+                    'display' => false,
+                ],
+                'tooltip' => [
+                    'enabled' => true,
+                    'backgroundColor' => '#222632',
+                    'titleColor' => '#9CA3AF',
+                    'bodyColor' => '#FFFFFF',
+                    'borderColor' => '#BF00FF',
+                    'borderWidth' => 1,
+                    'padding' => 12,
+                ],
+            ],
+        ]);
 
         return $chart;
     }
@@ -88,7 +167,7 @@ class ChartService
             'scales' => [
                 'x' => [
                     'grid' => [
-                        'color' => 'rgba(255, 255, 255, 0.1)',
+                        'color' => '#FFFFFF1A',
                     ],
                     'ticks' => [
                         'color' => '#9CA3AF',
@@ -97,7 +176,7 @@ class ChartService
                 ],
                 'y' => [
                     'grid' => [
-                        'color' => 'rgba(255, 255, 255, 0.1)',
+                        'color' => '#FFFFFF1A',
                     ],
                     'ticks' => [
                         'color' => '#9CA3AF',
