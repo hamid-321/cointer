@@ -14,7 +14,7 @@
                 {% include 'transaction/_form.html.twig' with { button_label: 'Save Changes' } %}
 
                 <p class="mt-6 text-center">
-                    <a href="{{ path('app_portfolio_coin', {'id': portfolio.id, 'coinId': transaction.coin.id}) }}" class="text-gray-400 text-sm hover:text-white transition-colors">Cancel</a>
+                    <a href="{{ path('app_portfolio_coin', {'id': portfolio.id, 'coinId': transaction.coin.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>
                 </p>
             </div>
         </div>
