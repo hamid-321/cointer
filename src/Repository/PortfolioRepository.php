@@ -45,7 +45,7 @@ class PortfolioRepository extends ServiceEntityRepository
     /**
      * Returns portfolios orders by value in desc order ready for pagination
      */
-    public function getPaginationQuery(User $user): \Doctrine\ORM\Query
+    public function getAllPortfolios(User $user): array
     {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.transactions', 't')
@@ -63,7 +63,57 @@ class PortfolioRepository extends ServiceEntityRepository
             ->orderBy('total_value', 'DESC')
             ->addorderBy('p.name', 'DESC')
             ->getQuery()
+            ->getResult()
         ;
+    }
+
+    public function getPaginationQuery(User $user, string $searchTerm = ''): \Doctrine\ORM\Query
+    {
+        $QueryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.transactions', 't')
+            ->leftJoin('t.coin', 'c')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user);
+
+            if ($searchTerm !== '') 
+            {
+                $QueryBuilder->andWhere('p.name LIKE :search')
+                             ->setParameter('search', '%' . $searchTerm . '%');
+            }
+
+            return $QueryBuilder
+            // Current Total Value
+                ->addSelect('SUM((CASE WHEN t.type = \'buy\' THEN t.quantity 
+                                    WHEN t.type = \'sell\' THEN -t.quantity ELSE 0 END) * c.price)
+                                as hidden total_value
+                            ')
+                // Total cost
+                ->addSelect('SUM(CASE WHEN t.type = \'buy\' THEN t.price 
+                                    WHEN t.type = \'sell\' THEN -t.price ELSE 0 END)
+                                as hidden total_cost
+                            ')
+                
+                // Profit & Loss
+                ->addSelect('COALESCE(
+                                ((SUM((CASE WHEN t.type = \'buy\' THEN t.quantity 
+                                            WHEN t.type = \'sell\' THEN -t.quantity ELSE 0 END) * c.price)
+                                - SUM(CASE WHEN t.type = \'buy\' THEN t.price 
+                                            WHEN t.type = \'sell\' THEN -t.price ELSE 0 END))
+                                * 100.0)
+                                / NULLIF(SUM(CASE WHEN t.type = \'buy\' THEN t.price 
+                                                    WHEN t.type = \'sell\' THEN -t.price ELSE 0 END), 0), 0) 
+                                as hidden profit_loss_percent
+                            ')
+                            
+                // 24h % Change
+                ->addSelect('COALESCE(
+                                SUM((CASE WHEN t.type = \'buy\' THEN t.quantity WHEN t.type = \'sell\' THEN -t.quantity ELSE 0 END) * c.price * COALESCE(c.change_24h, 0))
+                                / NULLIF(SUM((CASE WHEN t.type = \'buy\' THEN t.quantity WHEN t.type = \'sell\' THEN -t.quantity ELSE 0 END) * c.price), 0), 0)
+                                as hidden change_24h
+                            ')
+                
+                ->groupBy('p.id')
+                ->getQuery();
     }
 
 

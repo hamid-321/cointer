@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[IsGranted('ROLE_USER')]
 final class PortfolioController extends AbstractController
@@ -27,11 +28,12 @@ final class PortfolioController extends AbstractController
     ) {}
 
     #[Route('/portfolio', name: 'app_portfolio_index')]
-    public function index(PortfolioRepository $portfolioRepository): Response
+    public function index(PortfolioRepository $portfolioRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $portfolios = $portfolioRepository->getPaginationQuery($this->getUser());
-        $portfolios = $portfolios->getResult();
-        $combinedSummary = $this->portfolioSummaryService->getCombinedSummary($portfolios);
+        $searchTerm = $request->query->get('q', '');
+
+        $allPortfolios = $portfolioRepository->getAllPortfolios($this->getUser());
+        $combinedSummary = $this->portfolioSummaryService->getCombinedSummary($allPortfolios);
 
         $distributionChart = $this->chartService->buildDistributionChart(
             $combinedSummary['distributionLabels'],
@@ -39,11 +41,27 @@ final class PortfolioController extends AbstractController
         );
         $distributionColors = $this->chartService->getColourPalette(\count($combinedSummary['distributionLabels']));
 
+        $query = $portfolioRepository->getPaginationQuery($this->getUser(), $searchTerm);
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            5, // Items per page
+            ['defaultSortFieldName' => 'total_value', 'defaultSortDirection' => 'desc']
+        );
+
+        $currentPagePortfolios = $pagination->getItems();
+
+        $currentPageSummary = $this->portfolioSummaryService->getCombinedSummary($currentPagePortfolios);
+
         return $this->render('portfolio/index.html.twig', [
-            'portfolios' => $portfolios,
+            'portfolios' => $allPortfolios,
             'combined' => $combinedSummary,
+            'pagination' => $pagination,
+            'currentPageSummary' => $currentPageSummary,
             'distributionChart' => $distributionChart,
             'distributionColors' => $distributionColors,
+            'searchTerm' => $searchTerm,
         ]);
     }
 

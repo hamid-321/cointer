@@ -1,0 +1,44 @@
+{% if pageCount > 1 %}
+    <nav class="flex flex-wrap items-center justify-center gap-1 mt-4" aria-label="Pagination">
+        {% if first is defined and current != first %}
+            <a href="{{ path(route, knp_pagination_query(query, first, options)) }}"
+               class="px-3 py-2 text-sm font-medium text-gray-300 bg-card border border-primary rounded-lg hover:bg-[#2a2f3d] hover:text-white transition-colors">
+                &laquo;
+            </a>
+        {% endif %}
+
+        {% if previous is defined %}
+            <a rel="prev" href="{{ path(route, knp_pagination_query(query, previous, options)) }}"
+               class="px-3 py-2 text-sm font-medium text-gray-300 bg-card border border-primary rounded-lg hover:bg-[#2a2f3d] hover:text-white transition-colors">
+                &lsaquo;
+            </a>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <a href="{{ path(route, knp_pagination_query(query, page, options)) }}"
+                   class="px-3 py-2 text-sm font-medium text-gray-300 bg-card border border-primary rounded-lg hover:bg-[#2a2f3d] hover:text-white transition-colors">
+                    {{ page }}
+                </a>
+            {% else %}
+                <span class="px-3 py-2 text-sm font-medium text-white bg-accent border border-accent rounded-lg">
+                    {{ page }}
+                </span>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <a rel="next" href="{{ path(route, knp_pagination_query(query, next, options)) }}"
+               class="px-3 py-2 text-sm font-medium text-gray-300 bg-card border border-primary rounded-lg hover:bg-[#2a2f3d] hover:text-white transition-colors">
+                &rsaquo;
+            </a>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <a href="{{ path(route, knp_pagination_query(query, last, options)) }}"
+               class="px-3 py-2 text-sm font-medium text-gray-300 bg-card border border-primary rounded-lg hover:bg-[#2a2f3d] hover:text-white transition-colors">
+                &raquo;
+            </a>
+        {% endif %}
+    </nav>
+{% endif %}

@@ -1,0 +1,11 @@
+<a{% for attr, value in options %} {{ attr }}="{{ value }}"{% endfor %}>
+    {{- title -}}
+    {% if sorted %}
+        {# direction is the link target: 'asc' means current is desc (show down), 'desc' means current is asc (show up) #}
+        {% if direction == 'asc' %}
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        {% else %}
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+        {% endif %}
+    {% endif %}
+</a>

@@ -1520,6 +1520,28 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     postcss_config_file?: scalar|null|Param, // Path to PostCSS config file which is passed to the Tailwind CLI // Default: null
  *     strict_mode?: bool|null|Param, // When enabled, an exception will be thrown if there are no built assets (default: false in `test` env, true otherwise) // Default: null
  * }
+ * @psalm-type KnpPaginatorConfig = array{
+ *     default_options?: array{
+ *         sort_field_name?: scalar|null|Param, // Default: "sort"
+ *         sort_direction_name?: scalar|null|Param, // Default: "direction"
+ *         filter_field_name?: scalar|null|Param, // Default: "filterField"
+ *         filter_value_name?: scalar|null|Param, // Default: "filterValue"
+ *         page_name?: scalar|null|Param, // Default: "page"
+ *         distinct?: bool|Param, // Default: true
+ *         page_out_of_range?: scalar|null|Param, // Default: "ignore"
+ *         default_limit?: scalar|null|Param, // Default: 10
+ *     },
+ *     template?: array{
+ *         pagination?: scalar|null|Param, // Default: "@KnpPaginator/Pagination/sliding.html.twig"
+ *         rel_links?: scalar|null|Param, // Default: "@KnpPaginator/Pagination/rel_links.html.twig"
+ *         filtration?: scalar|null|Param, // Default: "@KnpPaginator/Pagination/filtration.html.twig"
+ *         sortable?: scalar|null|Param, // Default: "@KnpPaginator/Pagination/sortable_link.html.twig"
+ *     },
+ *     page_range?: scalar|null|Param, // Default: 5
+ *     page_limit?: scalar|null|Param, // Default: null
+ *     convert_exception?: bool|Param, // Default: false
+ *     remove_first_page_param?: bool|Param, // Default: false
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1534,6 +1556,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     knp_paginator?: KnpPaginatorConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1551,6 +1574,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         knp_paginator?: KnpPaginatorConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1566,6 +1590,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         knp_paginator?: KnpPaginatorConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1582,6 +1607,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         knp_paginator?: KnpPaginatorConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
