@@ -47,9 +47,14 @@
 
                 <!-- Portfolio Distribution -->
                 <div class="bg-card rounded-2xl p-6">
-                    <h2 class="text-gray-400 text-sm font-medium mb-3">Portfolio Distribution</h2>
+                    <h2 class="text-gray-400 text-sm font-medium mb-3">Coin Distribution</h2>
                     <div class="flex items-center justify-between">
-                        <div class="space-y-2">
+                        <div class="space-y-1 max-h-[130px] overflow-y-auto 
+                                    [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]
+                                    [&::-webkit-scrollbar]:w-1
+                                    [&::-webkit-scrollbar-thumb]:bg-accent
+                                    [&::-webkit-scrollbar-thumb]:rounded-full"
+                                >
                             {% if holdings|length > 0 %}
                                 {% for item in holdings %}
                                     <div class="flex items-center gap-2">
