@@ -107,30 +107,37 @@ final class PortfolioController extends AbstractController
     }
 
     #[Route('/portfolio/{id}/coin/{coinId}', name: 'app_portfolio_coin', requirements: ['id' => '\d+', 'coinId' => '\d+'])]
-    public function showCoin(Portfolio $portfolio, int $coinId, TransactionRepository $transactionRepository, EntityManagerInterface $entityManager): Response
+    public function showCoin(Portfolio $portfolio, int $coinId, TransactionRepository $transactionRepository, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response 
     {
-        if ($portfolio->getUser() !== $this->getUser())
+        if ($portfolio->getUser() !== $this->getUser()) 
         {
             throw $this->createAccessDeniedException();
         }
 
         $coin = $entityManager->getRepository(Coin::class)->find($coinId);
-        if (!$coin)
+        if (!$coin) 
         {
             throw $this->createNotFoundException('Coin not found');
         }
 
-        $transactions = $transactionRepository->findBy(
-            ['portfolio' => $portfolio, 'coin' => $coin],
-            ['created_at' => 'DESC']
-        );
+        // All transactions for holding calculation
+        $allTransactions = $transactionRepository->getPortfolioCoins($portfolio, $coin);
 
-        $holding = $this->holdingsCalculator->calculate($transactions);
+        $holding = $this->holdingsCalculator->calculate($allTransactions);
+
+        // Paginated transactions for display
+        $query = $transactionRepository->getPaginationQuery($portfolio, $coin);
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10,
+            ['defaultSortFieldName' => 't.created_at', 'defaultSortDirection' => 'desc']
+        );
 
         return $this->render('portfolio/show_coin.html.twig', [
             'portfolio' => $portfolio,
             'coin' => $coin,
-            'transactions' => $transactions,
+            'pagination' => $pagination,
             'holding' => $holding,
         ]);
     }
