@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Coin;
 use App\Entity\Portfolio;
+use App\Entity\Transaction;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -82,7 +84,7 @@ class PortfolioRepository extends ServiceEntityRepository
             }
 
             return $QueryBuilder
-            // Current Total Value
+                // Current Total Value
                 ->addSelect('SUM((CASE WHEN t.type = \'buy\' THEN t.quantity 
                                     WHEN t.type = \'sell\' THEN -t.quantity ELSE 0 END) * c.price)
                                 as hidden total_value

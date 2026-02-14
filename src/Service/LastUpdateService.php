@@ -4,6 +4,15 @@ namespace App\Service;
 
 class LastUpdateService
 {
+    public function getLastUpdatedFromItems(array $items): string
+    {
+        if (empty($items)) {
+            return 'Never';
+        }
+
+        return $this->getTimeAgo($items[0]->getUpdatedAt());
+    }
+
     /**
      * Calculate the "time ago" string from a DateTimeImmutable
      */

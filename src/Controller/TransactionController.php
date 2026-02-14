@@ -59,12 +59,12 @@ final class TransactionController extends AbstractController
         }
 
         $coinId = $transaction->getCoin()->getId();
-        $pricePerCoin = ($transaction->getQuantity() > 0)
-            ? round($transaction->getPrice() / $transaction->getQuantity(), 2)
-            : null;
+        $pricePerCoin = $transaction->getPricePerCoin();
+
         $form = $this->createForm(TransactionType::class, $transaction, [
             'price_per_coin' => $pricePerCoin,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())

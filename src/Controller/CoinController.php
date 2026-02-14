@@ -35,11 +35,7 @@ final class CoinController extends AbstractController
             ['defaultSortFieldName' => 'c.market_cap', 'defaultSortDirection' => 'desc']
         );
 
-        $lastUpdated = 'Never';
-        $items = $pagination->getItems();
-        if (!empty($items)) {
-            $lastUpdated = $this->lastUpdateService->getTimeAgo($items[0]->getUpdatedAt());
-        }
+        $lastUpdated = $this->lastUpdateService->getLastUpdatedFromItems($pagination->getItems());
 
         return $this->render('coin/index.html.twig', [
             'pagination' => $pagination,

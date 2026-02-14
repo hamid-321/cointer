@@ -68,6 +68,26 @@ class PortfolioSummaryService
         ];
     }
 
+    public function getSortedDistributionForChart(array $holdings, float $totalValue): array
+    {
+        $holdings = array_values($holdings);
+        usort($holdings, fn ($a, $b) => $b['currentValue'] <=> $a['currentValue']);
+
+        $labels = [];
+        $data = [];
+        foreach ($holdings as $item) {
+            $labels[] = $item['coin']?->getName() ?? '';
+            $percent = $totalValue > 0 ? ($item['currentValue'] / $totalValue * 100) : 0;
+            $data[] = round($percent, 1);
+        }
+
+        return [
+            'holdings' => $holdings,
+            'labels' => $labels,
+            'data' => $data,
+        ];
+    }
+
     public function getCombinedSummary(array $portfolios): array
     {
         $totalValue = 0.0;

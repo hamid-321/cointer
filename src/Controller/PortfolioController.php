@@ -6,6 +6,7 @@ use App\Entity\Coin;
 use App\Entity\Portfolio;
 use App\Form\PortfolioType;
 use App\Repository\PortfolioRepository;
+use App\Repository\CoinRepository;
 use App\Repository\TransactionRepository;
 use App\Service\ChartService;
 use App\Service\HoldingsCalculatorService;
@@ -66,7 +67,7 @@ final class PortfolioController extends AbstractController
     }
 
     #[Route('/portfolio/{id}', name: 'app_portfolio_show', requirements: ['id' => '\d+'])]
-    public function show(Portfolio $portfolio): Response
+    public function show(Portfolio $portfolio, CoinRepository $coinRepository, Request $request, PaginatorInterface $paginator): Response
     {
         if ($portfolio->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -74,21 +75,16 @@ final class PortfolioController extends AbstractController
 
         $summary = $this->portfolioSummaryService->getPortfolioSummary($portfolio);
 
-        $holdings = $summary['holdings'] ?? [];
-        
-        usort($holdings, function ($a, $b) 
-        {
-            return $b['currentValue'] <=> $a['currentValue']; // Highest value first
-        });
+        $searchTerm = $request->query->get('q', '');
 
-        $sortedLabels = [];
-        $sortedData = [];
-
-        foreach ($holdings as $item) 
-        {
-            $sortedLabels[] = $item['coin']->getName();
-            $sortedData[] = $item['currentValue'];
-        }
+        $totalValue = $summary['totalValue'] ?? 0;
+        $distribution = $this->portfolioSummaryService->getSortedDistributionForChart(
+            $summary['holdings'] ?? [],
+            $totalValue
+        );
+        $holdings = $distribution['holdings'];
+        $sortedLabels = $distribution['labels'];
+        $sortedData = $distribution['data'];
 
         $distributionChart = $this->chartService->buildDistributionChart(
             $sortedLabels,
@@ -97,12 +93,26 @@ final class PortfolioController extends AbstractController
 
         $distributionColors = $this->chartService->getColourPalette(\count($sortedLabels));
 
+        $query = $coinRepository->getHoldingsPaginationQuery($portfolio, $searchTerm);
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            4,
+            [
+                'defaultSortFieldName' => 'current_value',
+                'defaultSortDirection' => 'desc',
+            ]
+        );
+
+
         return $this->render('portfolio/show.html.twig', [
             'portfolio' => $portfolio,
             'summary' => $summary,
             'holdings' => $holdings,
+            'pagination' => $pagination,
             'distributionChart' => $distributionChart,
             'distributionColors' => $distributionColors,
+            'searchTerm' => $searchTerm,
         ]);
     }
 
@@ -130,7 +140,7 @@ final class PortfolioController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10,
+            7,
             ['defaultSortFieldName' => 't.created_at', 'defaultSortDirection' => 'desc']
         );
 
