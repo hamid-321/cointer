@@ -14,6 +14,8 @@ class DataFormatter extends AbstractExtension
             new TwigFilter('format_price', [$this, 'formatPrice']),
             new TwigFilter('format_currency', [$this, 'formatCurrency']),
             new TwigFilter('format_quantity', [$this, 'formatQuantity']),
+            new TwigFilter('format_quantity_input', [$this, 'formatQuantityInput']),
+            new TwigFilter('format_price_input', [$this, 'formatPriceInput']),
             new TwigFilter('format_date', [$this, 'formatDate']),
         ];
     }
@@ -102,6 +104,46 @@ class DataFormatter extends AbstractExtension
 
         // Remove trailing zeros after decimal point
         $formatted = rtrim(rtrim(number_format((float) $value, 8, '.', ','), '0'), '.');
+
+        return $formatted;
+    }
+
+    public function formatQuantityInput(float|string|null $value): string
+    {
+        if ($value === null)
+        {
+            return '0';
+        }
+        // no thousands separator
+        $formatted = rtrim(rtrim(number_format((float) $value, 8, '.', ''), '0'), '.');
+
+        return $formatted ?: '0';
+    }
+
+    public function formatPriceInput(float|string|null $value): string
+    {
+        if ($value === null)
+        {
+            return '0.00';
+        }
+
+        $float = (float) $value;
+
+        // no thousands separator
+        $formatted = rtrim(rtrim(number_format($float, 8, '.', ''), '0'), '.');
+
+        if ($formatted === '' || $float === 0.0)
+        {
+            return '0.00';
+        }
+
+        $hasDecimal = str_contains($formatted, '.');
+        $decimalPart = $hasDecimal ? substr($formatted, strpos($formatted, '.') + 1) : '';
+
+        if (!$hasDecimal || strlen($decimalPart) < 2)
+        {
+            return number_format($float, 2, '.', '');
+        }
 
         return $formatted;
     }

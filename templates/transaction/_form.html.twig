@@ -21,30 +21,36 @@
         {% endif %}
     </div>
 
-    <div>
-        <label for="{{ form.coin.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Coin</label>
-        {{ form_widget(form.coin, {
-            attr: {
-                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent'
-            }
-        }) }}
-        {% if form.coin.vars.errors|length > 0 %}
-            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
-                {% for error in form.coin.vars.errors %}
-                    <span>{{ error.message }}</span><br>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+    <div data-controller="balance-checker" data-balance-checker-url-value="{{ balance_url|default('') }}" data-balance-checker-exclude-transaction-id-value="{{ exclude_transaction_id|default('') }}">
+        <div>
+            <label for="{{ form.coin.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Coin</label>
+            {{ form_widget(form.coin, {
+                attr: {
+                    class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                    'data-action': 'change->balance-checker#updateBalance'
+                }
+            }) }}
+            {% if form.coin.vars.errors|length > 0 %}
+                <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                    {% for error in form.coin.vars.errors %}
+                        <span>{{ error.message }}</span><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-    <div>
-        <label for="{{ form.quantity.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Quantity</label>
-        {{ form_widget(form.quantity, {
-            attr: {
-                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
-                placeholder: 'e.g. 0.5'
-            }
-        }) }}
+        <div>
+            <label for="{{ form.quantity.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Quantity</label>
+            <p class="text-gray-400 text-sm mb-1">
+                Current owned quantity: <span data-balance-checker-target="display">0.00000000</span>
+            </p>
+            {{ form_widget(form.quantity, {
+                attr: {
+                    class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
+                    placeholder: 'e.g. 0.5',
+                    value: form.quantity.vars.value is defined ? (form.quantity.vars.value|format_quantity_input) : ''
+                }
+            }) }}
         {% if form.quantity.vars.errors|length > 0 %}
             <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
                 {% for error in form.quantity.vars.errors %}
@@ -52,6 +58,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+        </div>
     </div>
 
     <div>
@@ -59,7 +66,8 @@
         {{ form_widget(form.pricePerCoin, {
             attr: {
                 class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
-                placeholder: 'e.g. 95000.00'
+                placeholder: 'e.g. 95000.00',
+                value: form.pricePerCoin.vars.value is defined ? (form.pricePerCoin.vars.value|format_price_input) : ''
             }
         }) }}
     </div>
@@ -69,7 +77,8 @@
         {{ form_widget(form.price, {
             attr: {
                 class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
-                placeholder: 'e.g. 47500.00'
+                placeholder: 'e.g. 47500.00',
+                value: form.price.vars.value is defined ? (form.price.vars.value|format_price_input) : ''
             }
         }) }}
         {% if form.price.vars.errors|length > 0 %}

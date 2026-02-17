@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Portfolio;
+use App\Entity\Transaction;
 
 class PortfolioSummaryService
 {
@@ -141,17 +142,36 @@ class PortfolioSummaryService
         ];
     }
 
-    private function getHoldingsByPortfolio(Portfolio $portfolio): array
+
+    public function getHoldingsQuantityByCoin(Portfolio $portfolio, ?Transaction $exclude = null): array
     {
-        // Group transactions by coin
+        $holdings = $this->getHoldingsByPortfolio($portfolio, $exclude);
+        $result = [];
+        foreach ($holdings as $coinId => $holding) {
+            $result[(int) $coinId] = (float) $holding['quantity'];
+        }
+        return $result;
+    }
+
+    public function getAvailableQuantityToSell(Portfolio $portfolio, int $coinId, ?Transaction $exclude = null): float
+    {
+        $byCoin = $this->getHoldingsQuantityByCoin($portfolio, $exclude);
+        return $byCoin[$coinId] ?? 0.0;
+    }
+
+    private function getHoldingsByPortfolio(Portfolio $portfolio, ?Transaction $exclude = null): array
+    {
         $transactionsByCoin = [];
         foreach ($portfolio->getTransactions() as $transaction)
         {
+            if ($exclude !== null && $transaction->getId() === $exclude->getId()) 
+            {
+                continue;
+            }
             $coinId = $transaction->getCoin()->getId();
             $transactionsByCoin[$coinId][] = $transaction;
         }
 
-        // Calculate holdings for each coin
         $holdings = [];
         foreach ($transactionsByCoin as $coinId => $transactions)
         {

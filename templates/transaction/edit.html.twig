@@ -11,7 +11,7 @@
                 <h1 class="text-2xl font-semibold text-white mb-2 text-center">Edit Transaction</h1>
                 <p class="text-gray-400 text-sm text-center mb-6">{{ portfolio.name }}</p>
 
-                {% include 'transaction/_form.html.twig' with { button_label: 'Save Changes' } %}
+                {% include 'transaction/_form.html.twig' with { button_label: 'Save Changes', balance_url: path('app_portfolio_coin_balance', { id: portfolio.id }), exclude_transaction_id: transaction.id } %}
 
                 <p class="mt-6 text-center">
                     <a href="{{ path('app_portfolio_coin', {'id': portfolio.id, 'coinId': transaction.coin.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>

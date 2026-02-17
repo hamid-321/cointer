@@ -3,20 +3,25 @@
 namespace App\Form;
 
 use App\Entity\Coin;
-use App\Entity\Portfolio;
 use App\Entity\Transaction;
+use App\Twig\DataFormatter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class TransactionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $holdingsByCoin = $options['holdings_by_coin'];
+        $quantityFormatter = $options['quantity_formatter'];
+
         $builder
             ->add('type', ChoiceType::class, [
                 'choices' => [
@@ -32,6 +37,38 @@ class TransactionType extends AbstractType
             ->add('quantity', NumberType::class, [
                 'scale' => 8,
                 'attr' => ['step' => 'any'],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Quantity cannot be negative.',
+                    ]),
+                    new Callback(function ($quantity, ExecutionContextInterface $context) use ($holdingsByCoin, $quantityFormatter): void {
+                        $transaction = $context->getRoot()->getData();
+                        if (!$transaction instanceof Transaction || $transaction->getType() !== 'sell') 
+                        {
+                            return;
+                        }
+
+                        $coin = $transaction->getCoin();
+                        
+                        if (!$coin) 
+                        {
+                            return;
+                        }
+
+                        $available = $holdingsByCoin[$coin->getId()] ?? 0.0;
+
+                        if ((float) $quantity > $available) 
+                        {
+                            $formatted = $quantityFormatter instanceof DataFormatter
+                                ? $quantityFormatter->formatQuantityInput($available)
+                                : number_format($available, 8);
+                            $context->buildViolation('You can only sell up to {{ balance }} tokens.')
+                                ->setParameter('{{ balance }}', $formatted)
+                                ->addViolation();
+                        }
+                    }),
+                ],
             ])
             //pricePerCoin is not actually in the database
             //It is used for the JS price calc functionality
@@ -42,10 +79,22 @@ class TransactionType extends AbstractType
                 'scale' => 2,
                 'attr' => ['step' => 'any'],
                 'data' => $options['price_per_coin'],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Price per coin cannot be negative.',
+                    ]),
+                ],
             ])
             ->add('price', NumberType::class, [
                 'scale' => 10,
                 'attr' => ['step' => 'any'],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Price cannot be negative.',
+                    ]),
+                ],
             ])
         ;
     }
@@ -55,6 +104,10 @@ class TransactionType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Transaction::class,
             'price_per_coin' => null,
+            'holdings_by_coin' => [],
+            'quantity_formatter' => null,
         ]);
+        $resolver->setAllowedTypes('holdings_by_coin', 'array');
+        $resolver->setAllowedTypes('quantity_formatter', [DataFormatter::class, 'null']);
     }
 }
