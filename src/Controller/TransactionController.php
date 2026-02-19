@@ -66,6 +66,13 @@ final class TransactionController extends AbstractController
         $holdingsByCoin = $this->portfolioSummaryService->getHoldingsQuantityByCoin($portfolio);
 
         $transaction = new Transaction();
+        $coinId = $request->query->getInt('coinId');
+        if ($coinId > 0) {
+            $coin = $entityManager->getRepository(Coin::class)->find($coinId);
+            if ($coin) {
+                $transaction->setCoin($coin);
+            }
+        }
         $form = $this->createForm(TransactionType::class, $transaction, [
             'holdings_by_coin' => $holdingsByCoin,
             'quantity_formatter' => $this->dataFormatter,
@@ -80,12 +87,16 @@ final class TransactionController extends AbstractController
             $entityManager->persist($transaction);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_portfolio_show', ['id' => $portfolio->getId()]);
+            return $this->redirectToRoute('app_portfolio_coin', [
+                'id' => $portfolio->getId(),
+                'coinId' => $transaction->getCoin()->getId(),
+            ]);
         }
 
         return $this->render('transaction/new.html.twig', [
             'form' => $form,
             'portfolio' => $portfolio,
+            'coin' => $transaction->getCoin(),
         ]);
     }
 
@@ -121,7 +132,7 @@ final class TransactionController extends AbstractController
 
             return $this->redirectToRoute('app_portfolio_coin', [
                 'id' => $portfolio->getId(),
-                'coinId' => $coinId,
+                'coinId' => $transaction->getCoin()->getId(),
             ]);
         }
 

@@ -14,7 +14,11 @@
                 {% include 'transaction/_form.html.twig' with { button_label: 'Add Transaction', balance_url: path('app_portfolio_coin_balance', { id: portfolio.id }) } %}
 
                 <p class="mt-6 text-center">
-                    <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>
+                    {% if coin %}
+                        <a href="{{ path('app_portfolio_coin', {'id': portfolio.id, 'coinId': coin.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>
+                    {% else %}
+                        <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>
+                    {% endif %}
                 </p>
             </div>
         </div>
