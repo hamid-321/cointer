@@ -47,7 +47,7 @@ final class PortfolioController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            5, // Items per page
+            10, // Items per page
             ['defaultSortFieldName' => 'total_value', 'defaultSortDirection' => 'desc']
         );
 
@@ -97,7 +97,7 @@ final class PortfolioController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            4,
+            8,
             [
                 'defaultSortFieldName' => 'current_value',
                 'defaultSortDirection' => 'desc',
@@ -140,7 +140,7 @@ final class PortfolioController extends AbstractController
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            7,
+            10,
             ['defaultSortFieldName' => 't.created_at', 'defaultSortDirection' => 'desc']
         );
 
