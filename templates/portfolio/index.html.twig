@@ -149,53 +149,50 @@
                         {% endif %}
                     </div>
 
-                    <!-- Mobile Table -->
-                    <div class="md:hidden">
-                        <!-- Mobile Header -->
-                        <div class="grid grid-cols-4 gap-2 px-1 pb-2 border-b border-primary">
-                            <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors">
-                                {{ knp_pagination_sortable(pagination, 'Name', 'p.name', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
-                            </div>
-                            <div class="text-gray-400 text-xs font-medium text-right hover:text-white transition-colors">
-                                {{ knp_pagination_sortable(pagination, 'Value', 'total_value', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
-                            </div>
-                            <div class="text-gray-400 text-xs font-medium text-right hover:text-white transition-colors">
-                                {{ knp_pagination_sortable(pagination, 'P&L', 'profit_loss_percent', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
-                            </div>
-                            <div class="text-gray-400 text-xs font-medium text-right hover:text-white transition-colors">
-                                {{ knp_pagination_sortable(pagination, '24h', 'change_24h', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
-                            </div>
+                    <!-- Mobile Table: single grid so headers and rows share column tracks -->
+                    <div class="md:hidden grid gap-x-2 gap-y-0 px-1" style="grid-template-columns: min-content 1fr 1fr 1fr;">
+                        <!-- Header row -->
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary flex items-center min-w-0">
+                            {{ knp_pagination_sortable(pagination, 'Name', 'p.name', { class: 'inline-flex items-center gap-1 cursor-pointer truncate' }, [], 'components/_sortable_link.html.twig') }}
+                        </div>
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
+                            {{ knp_pagination_sortable(pagination, 'Value', 'total_value', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
+                        </div>
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
+                            {{ knp_pagination_sortable(pagination, 'P&L', 'profit_loss_percent', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
+                        </div>
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
+                            {{ knp_pagination_sortable(pagination, '24h', 'change_24h', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
 
-                        <!-- Mobile Rows -->
                         {% if pagination|length > 0 %}
                             {% for portfolio in pagination %}
                                 {% set portfolioSummary = combined.portfolioSummaries[portfolio.id] ?? null %}
-                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="grid grid-cols-4 px-1 py-2 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]">
-                                    <div class="text-white text-sm font-medium truncate">{{ portfolio.name }}</div>
-                                    <div class="text-white text-sm text-right">{{ portfolioSummary ? portfolioSummary.totalValue|format_price : '$0.00' }}</div>
-                                    <div class="text-right">
-                                        {% if portfolioSummary %}
-                                            <span class="text-sm {% if portfolioSummary.profitLossPercent >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
-                                                {% if portfolioSummary.profitLossPercent >= 0 %}+{% endif %}{{ portfolioSummary.profitLossPercent|number_format(1) }}%
-                                            </span>
-                                        {% else %}
-                                            <span class="text-gray-400 text-sm">0.0%</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="text-right">
-                                        {% if portfolioSummary %}
-                                            <span class="text-sm {% if portfolioSummary.change24h >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
-                                                {% if portfolioSummary.change24h >= 0 %}+{% endif %}{{ portfolioSummary.change24h|number_format(1) }}%
-                                            </span>
-                                        {% else %}
-                                            <span class="text-gray-400 text-sm">0.0%</span>
-                                        {% endif %}
-                                    </div>
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="py-2 border-b border-primary flex items-center min-w-0 col-span-1">
+                                    <span class="text-white text-sm font-medium truncate">{{ portfolio.name }}</span>
+                                </a>
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="text-white text-sm text-right py-2 border-b border-primary min-w-0 flex items-center justify-end col-span-1">{{ portfolioSummary ? portfolioSummary.totalValue|format_price : '$0.00' }}</a>
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="py-2 border-b border-primary min-w-0 flex items-center justify-end col-span-1">
+                                    {% if portfolioSummary %}
+                                        <span class="text-sm {% if portfolioSummary.profitLossPercent >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                                            {% if portfolioSummary.profitLossPercent >= 0 %}+{% endif %}{{ portfolioSummary.profitLossPercent|number_format(1) }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-gray-400 text-sm">0.0%</span>
+                                    {% endif %}
+                                </a>
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="py-2 border-b border-primary min-w-0 flex items-center justify-end col-span-1">
+                                    {% if portfolioSummary %}
+                                        <span class="text-sm {% if portfolioSummary.change24h >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
+                                            {% if portfolioSummary.change24h >= 0 %}+{% endif %}{{ portfolioSummary.change24h|number_format(1) }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-gray-400 text-sm">0.0%</span>
+                                    {% endif %}
                                 </a>
                             {% endfor %}
                         {% else %}
-                            <div class="text-center text-gray-400 py-4">No portfolios found.</div>
+                            <div class="col-span-4 text-center text-gray-400 py-4">No portfolios found.</div>
                         {% endif %}
                     </div>
                         {{ knp_pagination_render(pagination, 'components/_pagination.html.twig') }}
