@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Form\CoinAutoCompleteField;
 
 class TransactionType extends AbstractType
 {
@@ -29,10 +30,11 @@ class TransactionType extends AbstractType
                     'Sell' => 'sell',
                 ],
             ])
-            ->add('coin', EntityType::class, [
-                'class' => Coin::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Select a coin',
+            ->add('coin', CoinAutoCompleteField::class, [
+                'label' => 'Select Coin',
+                'attr' => [
+                    'placeholder' => 'Type to search',
+                ],
             ])
             ->add('quantity', NumberType::class, [
                 'scale' => 8,

@@ -18,3 +18,91 @@
 body {
     background-color: var(--color-bg-primary);
 }
+
+/* Styling for tom select auto complete for coins */
+
+.ts-wrapper {
+    width: 100% !important;
+    margin-bottom: 1.25rem;
+}
+
+.ts-wrapper.single .ts-control {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    min-height: 2.25rem !important;
+    padding: 0.5rem 0.75rem !important;
+    background-color: var(--color-bg-primary) !important;
+    border: 1px solid #4b5563 !important;
+    border-radius: 0.375rem !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 2px 0 #0000000d !important;
+}
+
+.ts-wrapper.single .ts-control > .item {
+    flex-shrink: 0 !important;
+    max-width: 100% !important;
+}
+.ts-wrapper.single .ts-control > input {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+}
+
+.ts-wrapper.single.focus .ts-control,
+.ts-wrapper.single.dropdown-active .ts-control {
+    border-color: var(--color-accent) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--color-accent) !important;
+}
+
+.ts-control input {
+    color: #ffffff !important;
+    background: transparent !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.ts-control input::placeholder {
+    color: #6b7280 !important;
+}
+
+/* Hide placeholder once a coin is selected */
+.ts-wrapper.single.has-items .ts-control input::placeholder {
+    color: transparent !important;
+}
+
+.ts-wrapper .item {
+    color: #ffffff !important;
+}
+
+.ts-dropdown {
+    background-color: var(--color-bg-card) !important;
+    border: 1px solid #4b5563 !important;
+    color: #ffffff !important;
+    border-radius: 0.375rem !important;
+    margin-top: 0.25rem !important;
+    box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a !important;
+}
+
+.ts-dropdown .option.active,
+.ts-dropdown .option.selected,
+.ts-dropdown [data-selectable].active,
+.ts-dropdown [data-selectable].selected {
+    background-color: var(--color-accent) !important;
+    color: #ffffff !important;
+}
+
+.ts-dropdown .no-results,
+.ts-dropdown .loading-more-results,
+.ts-dropdown .no-more-results {
+    padding: 0.5rem 0.75rem !important;
+    color: #9ca3af !important;
+}
+
+select[data-controller*="ux-autocomplete"] {
+    display: none !important;
+}

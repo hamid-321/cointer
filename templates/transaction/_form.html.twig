@@ -26,7 +26,6 @@
             <label for="{{ form.coin.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Coin</label>
             {{ form_widget(form.coin, {
                 attr: {
-                    class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent',
                     'data-action': 'change->balance-checker#updateBalance'
                 }
             }) }}
