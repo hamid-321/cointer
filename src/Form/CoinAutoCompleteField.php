@@ -17,10 +17,6 @@ class CoinAutoCompleteField extends AbstractType
             'class' => Coin::class,
             'choice_label' => 'name',
             'searchable_fields' => ['name', 'symbol'],
-            'tom_select_options' => [
-                // Only open dropdown when user types, not on focus (avoids showing selected value again in list)
-                'openOnFocus' => false,
-            ],
         ]);
     }
 
