@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use App\Form\CoinAutoCompleteField;
 
 class TransactionType extends AbstractType
@@ -78,7 +79,7 @@ class TransactionType extends AbstractType
             ->add('pricePerCoin', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
-                'scale' => 2,
+                'scale' => 10,
                 'attr' => ['step' => 'any'],
                 'data' => $options['price_per_coin'],
                 'constraints' => [
@@ -96,6 +97,14 @@ class TransactionType extends AbstractType
                         'value' => 0,
                         'message' => 'Price cannot be negative.',
                     ]),
+                ],
+            ])
+            ->add('createdAt', DateType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date',
+                'required' => true,
+                'attr' => [
+                    'class' => 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent scheme-dark',
                 ],
             ])
         ;

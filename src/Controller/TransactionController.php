@@ -66,6 +66,7 @@ final class TransactionController extends AbstractController
         $holdingsByCoin = $this->portfolioSummaryService->getHoldingsQuantityByCoin($portfolio);
 
         $transaction = new Transaction();
+        $transaction->setCreatedAt(new \DateTimeImmutable());
         $coinId = $request->query->getInt('coinId');
         if ($coinId > 0) {
             $coin = $entityManager->getRepository(Coin::class)->find($coinId);

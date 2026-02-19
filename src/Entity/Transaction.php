@@ -114,10 +114,10 @@ class Transaction
     public function getPricePerCoin(): ?float
     {
         $qty = (float) $this->quantity;
-        if ($qty <= 0) 
+        if ($qty <= 0)
         {
             return null;
         }
-        return round((float) $this->price / $qty, 2);
+        return round((float) $this->price / $qty, 10);
     }
 }

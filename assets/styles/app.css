@@ -106,3 +106,38 @@ body {
 select[data-controller*="ux-autocomplete"] {
     display: none !important;
 }
+
+input[type="date"] {
+    position: relative;
+}
+
+/* Style the calendar picker icon to be visible on dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Turns the black icon white to match your text */
+    cursor: pointer;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    color: transparent;
+    background: transparent;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Ensure the input height matches your Tom Select (44px) */
+input[type="date"] {
+    min-height: 44px;
+}
+
+/* No Tailwind equivalent for this yet */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
