@@ -9,11 +9,17 @@
     <main class="px-4 pt-2 pb-6 md:px-8">
         <div class="max-w-7xl mx-auto">
 
-            <!-- Back Link -->
-            <div class="mb-4">
+            <!-- Back and edit/delete -->
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <a href="{{ path('app_portfolio_index') }}" class="text-gray-400 text-md hover:text-white transition-colors">
                     &larr; Back to Portfolios
                 </a>
+                <div class="flex items-center gap-2">
+                    <a href="{{ path('app_portfolio_edit', {'id': portfolio.id}) }}" class="px-2 py-1 text-s font-medium bg-slate-500/20 text-slate-300 hover:bg-slate-500/30 border border-slate-500/50 rounded transition-colors">
+                        Edit Portfolio
+                    </a>
+                    {% include 'portfolio/_delete_form.html.twig' with { portfolio: portfolio } %}
+                </div>
             </div>
 
             <!-- Summary Cards -->

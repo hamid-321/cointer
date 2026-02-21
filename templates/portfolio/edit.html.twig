@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Portfolio - {{ portfolio.name }}{% endblock %}
+
+{% block body %}
+    {% include 'components/_navbar.html.twig' %}
+
+    <div class="min-h-[calc(100vh-4rem)] bg-primary flex items-center justify-center px-4 py-4">
+        <div class="w-full max-w-sm">
+            <div class="bg-card shadow rounded-lg p-6 max-h-full overflow-auto">
+                <h1 class="text-2xl font-semibold text-white mb-2 text-center">Edit Portfolio</h1>
+                <p class="text-gray-400 text-sm text-center mb-6">{{ portfolio.name }}</p>
+
+                {% include 'portfolio/_form.html.twig' with { button_label: 'Save Changes', portfolio: portfolio } %}
+
+                <p class="mt-6 text-center">
+                    <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="text-gray-400 text-md hover:text-white transition-colors">Cancel</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

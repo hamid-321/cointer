@@ -167,11 +167,54 @@ final class PortfolioController extends AbstractController
             $entityManager->persist($portfolio);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_portfolio_index');
+            return $this->redirectToRoute('app_portfolio_show', ['id' => $portfolio->getId()]);
         }
 
         return $this->render('portfolio/new.html.twig', [
             'form' => $form,
+            'portfolio' => $portfolio,
         ]);
+    }
+
+    #[Route('/portfolio/{id}/edit', name: 'app_portfolio_edit', requirements: ['id' => '\d+'])]
+    public function edit(Portfolio $portfolio, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($portfolio->getUser() !== $this->getUser())
+        {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(PortfolioType::class, $portfolio);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_portfolio_show', ['id' => $portfolio->getId()]);
+        }
+
+        return $this->render('portfolio/edit.html.twig', [
+            'form' => $form,
+            'portfolio' => $portfolio,
+        ]);
+    }
+
+    #[Route('/portfolio/{id}/delete', name: 'app_portfolio_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(Portfolio $portfolio, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($portfolio->getUser() !== $this->getUser())
+        {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($this->isCsrfTokenValid('delete-portfolio-' . $portfolio->getId(), $request->request->get('_token')))
+        {
+            $entityManager->remove($portfolio);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_portfolio_index');
     }
 }
