@@ -1,0 +1,38 @@
+{{ form_start(form, { attr: { class: 'space-y-5' } }) }}
+                        
+    <div>
+        <label for="{{ form.email.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Email</label>
+        {{ form_widget(form.email, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent'
+            }
+        }) }}
+        {% if form.email.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.email.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="{{ form.displayName.vars.id }}" class="block mb-2 text-sm font-medium text-gray-300">Display Name</label>
+        {{ form_widget(form.displayName, {
+            attr: {
+                class: 'block w-full rounded-md border border-gray-600 bg-primary px-3 py-2 text-white placeholder-gray-500 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent'
+            }
+        }) }}
+        {% if form.displayName.vars.errors|length > 0 %}
+            <div class="mt-2 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm" role="alert">
+                {% for error in form.displayName.vars.errors %}
+                    <span>{{ error.message }}</span><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="w-full inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-white font-medium shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent">
+        Update
+    </button>
+{{ form_end(form) }}

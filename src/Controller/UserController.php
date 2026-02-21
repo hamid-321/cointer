@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\Form\UserType;
+
+#[IsGranted('ROLE_USER')]
+final class UserController extends AbstractController
+{
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
+    public function profile(): Response
+    {
+        $user = $this->getUser();
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_profile');
+        }
+        return $this->render('user/edit.html.twig', [
+            'form' => $form,
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/delete', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
+    {
+        $user = $this->getUser();
+
+        if ($this->isCsrfTokenValid('delete-user-' . $user->getId(), $request->request->get('_token')))
+        {
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+
+            $this->addFlash('success', 'Your account has been deleted.');
+        }
+        
+        return $this->redirectToRoute('app_coin_index');
+    }
+}
