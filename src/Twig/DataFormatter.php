@@ -11,6 +11,7 @@ class DataFormatter extends AbstractExtension
     {
         return [
             new TwigFilter('format_market_cap', [$this, 'formatMarketCap']),
+            new TwigFilter('format_long_price', [$this, 'formatLongPrice']),
             new TwigFilter('format_price', [$this, 'formatPrice']),
             new TwigFilter('format_currency', [$this, 'formatCurrency']),
             new TwigFilter('format_quantity', [$this, 'formatQuantity']),
@@ -51,8 +52,34 @@ class DataFormatter extends AbstractExtension
     }
 
     /**
-     * Format price with appropriate decimal places
+     * Format long numeric values with appropriate suffix ( M, K)
      */
+    public function formatLongPrice(?float $value): string
+    {
+        if ($value === null || $value == 0)
+        {
+            return '$0.00';
+        }
+
+        $abs = abs($value);
+
+        if ($abs >= 1_000_000_000_000)
+        {
+            return '$' . number_format($value / 1_000_000_000_000, 2) . ' T';
+        }
+        elseif ($abs >= 1_000_000_000)
+        {
+            return '$' . number_format($value / 1_000_000_000, 2) . ' B';
+        }
+        elseif ($abs >= 10_000_000)
+        {
+            return '$' . number_format($value / 1_000_000, 2) . ' M';
+        }
+
+        return '$' . number_format($abs, 2);
+    }
+
+    
     public function formatPrice(?float $value): string
     {
         if ($value === null)
@@ -61,22 +88,36 @@ class DataFormatter extends AbstractExtension
         }
 
         $abs = abs($value);
-        
+
         if ($abs == 0)
         {
             return '$0.00';
         }
-        // For very small values (< $0.01), show more decimals
-        if ($abs < 0.01)
+
+        if ($abs >= 1)
         {
-            return '$' . number_format($value, 6);
-        }
-        elseif ($abs < 1)
-        {
-            return '$' . number_format($value, 4);
+            return '$' . number_format(round($value, 2), 2, '.', ',');
         }
 
-        return '$' . number_format($value, 2);
+        $formatted = number_format($value, 8, '.', ',');
+
+        return '$' . $this->stripTrailingZeros($formatted);
+    }
+
+    
+    /**
+     * Strip trailing zeros from decmial numbers
+     */
+    private function stripTrailingZeros(string $number): string
+    {
+        if (!str_contains($number, '.'))
+        {
+            return $number;
+        }
+        [$intPart, $decPart] = explode('.', $number, 2);
+        $decPart = rtrim($decPart, '0');
+
+        return $decPart === '' ? $intPart : $intPart . '.' . $decPart;
     }
 
     /**

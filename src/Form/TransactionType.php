@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use App\Form\CoinAutoCompleteField;
@@ -44,6 +45,11 @@ class TransactionType extends AbstractType
                     new GreaterThanOrEqual([
                         'value' => 0,
                         'message' => 'Quantity cannot be negative.',
+                    ]),
+                    new Range([
+                        'min' => 1,
+                        'max' => 99999999.99999999,
+                        'notInRangeMessage' => 'Quantity must be between {{ min }} and {{ max }}.',
                     ]),
                     new Callback(function ($quantity, ExecutionContextInterface $context) use ($holdingsByCoin, $quantityFormatter): void {
                         $transaction = $context->getRoot()->getData();
@@ -87,6 +93,11 @@ class TransactionType extends AbstractType
                         'value' => 0,
                         'message' => 'Price per coin cannot be negative.',
                     ]),
+                    new Range([
+                        'min' => 0,
+                        'max' => 999999999.999999999,
+                        'notInRangeMessage' => 'Price per coin must be between {{ min }} and {{ max }}.',
+                    ]),
                 ],
             ])
             ->add('price', NumberType::class, [
@@ -96,6 +107,11 @@ class TransactionType extends AbstractType
                     new GreaterThanOrEqual([
                         'value' => 0,
                         'message' => 'Price cannot be negative.',
+                    ]),
+                    new Range([
+                        'min' => 0,
+                        'max' => 999999999.99999999,
+                        'notInRangeMessage' => 'Total value must be between {{ min }} and {{ max }}.',
                     ]),
                 ],
             ])
