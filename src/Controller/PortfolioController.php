@@ -167,6 +167,8 @@ final class PortfolioController extends AbstractController
             $entityManager->persist($portfolio);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your portfolio has been created.');
+
             return $this->redirectToRoute('app_portfolio_show', ['id' => $portfolio->getId()]);
         }
 
@@ -192,6 +194,8 @@ final class PortfolioController extends AbstractController
         {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your portfolio has been updated.');
+
             return $this->redirectToRoute('app_portfolio_show', ['id' => $portfolio->getId()]);
         }
 
@@ -214,6 +218,8 @@ final class PortfolioController extends AbstractController
             $entityManager->remove($portfolio);
             $entityManager->flush();
         }
+
+        $this->addFlash('success', 'Your portfolio has been deleted.');
 
         return $this->redirectToRoute('app_portfolio_index');
     }

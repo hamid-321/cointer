@@ -88,6 +88,8 @@ final class TransactionController extends AbstractController
             $entityManager->persist($transaction);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your transaction has been added.');
+
             return $this->redirectToRoute('app_portfolio_coin', [
                 'id' => $portfolio->getId(),
                 'coinId' => $transaction->getCoin()->getId(),
@@ -131,6 +133,8 @@ final class TransactionController extends AbstractController
         {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your transaction has been updated.');
+
             return $this->redirectToRoute('app_portfolio_coin', [
                 'id' => $portfolio->getId(),
                 'coinId' => $transaction->getCoin()->getId(),
@@ -164,6 +168,8 @@ final class TransactionController extends AbstractController
         {
             $entityManager->remove($transaction);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Your transaction has been deleted.');
         }
 
         return $this->redirectToRoute('app_portfolio_coin', [

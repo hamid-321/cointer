@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Form\UserType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use App\Form\UserType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 #[IsGranted('ROLE_USER')]
 final class UserController extends AbstractController
@@ -24,9 +26,14 @@ final class UserController extends AbstractController
     }
 
     #[Route('/profile/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, TokenStorageInterface $tokenStorage): Response
     {
-        $user = $this->getUser();
+        $currentUser = $this->getUser();
+        $id = $currentUser->getId();
+
+        // Use a separate instance of user for the edit form
+        $entityManager->detach($currentUser);
+        $user = $userRepository->find($id);
 
         $form = $this->createForm(UserType::class, $user);
 
@@ -35,6 +42,11 @@ final class UserController extends AbstractController
         {
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+            $tokenStorage->setToken($token);
+
+            $this->addFlash('success', 'Your account has been updated.');
 
             return $this->redirectToRoute('app_user_profile');
         }

@@ -39,6 +39,8 @@ class RegistrationController extends AbstractController
             // Auto-login the user after registration
             $security->login($user, 'form_login', 'main');
 
+            $this->addFlash('success', 'Your account has been created.');
+
             return $this->redirectToRoute('app_coin_index');
         }
 
