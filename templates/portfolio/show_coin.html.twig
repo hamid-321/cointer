@@ -107,9 +107,9 @@
                                         {{ transaction.type|capitalize }}
                                     </span>
                                 </div>
-                                <div class="text-white text-left">{{ transaction.quantity|format_holdings }}</div>
+                                <div class="text-white">{{ transaction.quantity|format_holdings }}</div>
                                 <div class="text-white">{{ (transaction.price / transaction.quantity)|format_price }}</div>
-                                <div class="text-white text-left">{{ transaction.price|format_price }}</div>
+                                <div class="text-white">{{ transaction.price|format_price }}</div>
                                 <div class="text-gray-400">{{ transaction.createdAt|format_date(false) }}</div>
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': transaction.id}) }}" class="px-2 py-1 text-xs font-medium bg-slate-500/20 text-slate-300 hover:bg-slate-500/30 border border-slate-500/50 rounded transition-colors">
@@ -122,31 +122,31 @@
                     </div>
 
                     <!-- Mobile Table -->
-                    <div class="md:hidden grid gap-x-2 gap-y-0 px-1" style="grid-template-columns: min-content 1fr 1fr auto;">
+                    <div class="md:hidden grid gap-x-2 gap-y-0 px-1 min-w-0 overflow-hidden" style="grid-template-columns: minmax(min-content, 0.22fr) minmax(0, 0.65fr) minmax(0, 1.2fr) minmax(0, auto);">
                         <!-- Header row -->
-                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary flex items-center">
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary flex items-center min-w-0">
                             {{ knp_pagination_sortable(pagination, 'Type', 't.type', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
-                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-left min-w-0 flex items-center justify-start">
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
                             {{ knp_pagination_sortable(pagination, 'Amount', 't.quantity', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
-                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-left min-w-0 flex items-center justify-start">
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
                             {{ knp_pagination_sortable(pagination, 'Value', 't.price', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
                         <div class="py-2 border-b border-primary"></div>
 
                         {% for transaction in pagination %}
                             <div class="py-2 border-b border-primary flex items-center">
-                                <span class="px-2 py-1 rounded text-xs font-medium whitespace-nowrap
+                                <span class="px-1.5 py-0.5 rounded text-xs font-medium whitespace-nowrap shrink-0
                                     {% if transaction.type == 'buy' %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
                                     {% elseif transaction.type == 'sell' %}bg-red-500/20 text-red-400 border border-red-500/30
                                     {% else %}bg-blue-500/20 text-blue-400{% endif %}">
                                     {{ transaction.type|capitalize }}
                                 </span>
                             </div>
-                            <div class="text-white text-sm text-left py-2 border-b border-primary min-w-0 flex items-center justify-start">{{ transaction.quantity|format_holdings }}</div>
-                            <div class="text-white text-sm text-left py-2 border-b border-primary min-w-0 flex items-center justify-start">{{ (transaction.price)|format_price }}</div>
-                            <div class="py-2 border-b border-primary flex items-center justify-end gap-2">
+                            <div class="text-white text-sm text-right py-2 border-b border-primary min-w-0 flex items-center justify-end">{{ transaction.quantity|format_holdings }}</div>
+                            <div class="text-white text-sm text-right py-2 border-b border-primary min-w-0 flex items-center justify-end">{{ (transaction.price)|format_price }}</div>
+                            <div class="py-2 border-b border-primary flex items-center justify-end gap-1">
                                 <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': transaction.id}) }}" class="px-2 py-1 text-xs font-medium bg-slate-500/20 text-slate-300 hover:bg-slate-500/30 border border-slate-500/50 rounded transition-colors">
                                     Edit
                                 </a>

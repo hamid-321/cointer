@@ -113,9 +113,9 @@
                         {% if pagination|length > 0 %}
                             {% for portfolio in pagination %}
                                 {% set portfolioSummary = combined.portfolioSummaries[portfolio.id] ?? null %}
-                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="grid gap-4 px-4 py-4 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]" style="grid-template-columns: 1fr 1.2fr 0.6fr 0.5fr auto;">
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="grid grid-cols-5 gap-4 px-4 py-4 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]">
                                     <div class="text-white font-medium">{{ portfolio.name }}</div>
-                                    <div class="text-white">{{ portfolioSummary ? portfolioSummary.totalValue|format_value_short : '$0.00' }}</div>
+                                    <div class="text-white">{{ portfolioSummary ? portfolioSummary.totalValue|format_price : '$0.00' }}</div>
                                     <div>
                                         {% if portfolioSummary %}
                                             <span class="{% if portfolioSummary.profitLossPercent >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
