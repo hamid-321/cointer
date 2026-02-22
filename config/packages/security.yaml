@@ -27,6 +27,9 @@ security:
                 enable_csrf: true
                 default_target_path: app_coin_index
                 always_use_default_target_path: true
+            login_throttling:
+                max_attempts: 5
+                interval: '10 minutes'
                 
             logout:
                 path: app_logout
