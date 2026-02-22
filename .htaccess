@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Tell Apache the base of this project is /cointer/
+    RewriteBase /cointer/
+
+    # 1. If it's a real file in public, serve it
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # 2. Otherwise, send everything to the index.php
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>
