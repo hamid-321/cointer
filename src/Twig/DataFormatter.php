@@ -12,9 +12,11 @@ class DataFormatter extends AbstractExtension
         return [
             new TwigFilter('format_market_cap', [$this, 'formatMarketCap']),
             new TwigFilter('format_long_price', [$this, 'formatLongPrice']),
+            new TwigFilter('format_value_short', [$this, 'formatValueShort']),
             new TwigFilter('format_price', [$this, 'formatPrice']),
             new TwigFilter('format_currency', [$this, 'formatCurrency']),
             new TwigFilter('format_quantity', [$this, 'formatQuantity']),
+            new TwigFilter('format_holdings', [$this, 'formatHoldings']),
             new TwigFilter('format_quantity_input', [$this, 'formatQuantityInput']),
             new TwigFilter('format_price_input', [$this, 'formatPriceInput']),
             new TwigFilter('format_date', [$this, 'formatDate']),
@@ -79,7 +81,28 @@ class DataFormatter extends AbstractExtension
         return '$' . number_format($abs, 2);
     }
 
-    
+
+    public function formatValueShort(?float $value): string
+    {
+        if ($value === null || $value == 0)
+        {
+            return '$0.00';
+        }
+
+        $abs = abs($value);
+
+        if ($abs >= 1_000_000_000)
+        {
+            return '$' . number_format($value / 1_000_000_000, 2, '.', ',') . ' B';
+        }
+        if ($abs >= 1_000_000)
+        {
+            return '$' . number_format($value / 1_000_000, 2, '.', ',') . ' M';
+        }
+
+        return $this->formatPrice($value);
+    }
+
     public function formatPrice(?float $value): string
     {
         if ($value === null)
@@ -131,6 +154,25 @@ class DataFormatter extends AbstractExtension
         }
 
         return '$' . number_format($value, $decimals, '.', ',');
+    }
+
+    public function formatHoldings(float|string|null $value): string
+    {
+        if ($value === null)
+        {
+            return '0';
+        }
+
+        $float = (float) $value;
+
+        if ($float > 1)
+        {
+            $formatted = number_format(round($float, 2), 2, '.', ',');
+            return $this->stripTrailingZeros($formatted) ?: '0';
+        }
+
+        $formatted = number_format(round($float, 6), 6, '.', ',');
+        return $this->stripTrailingZeros($formatted) ?: '0';
     }
 
     /**

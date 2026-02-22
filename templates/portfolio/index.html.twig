@@ -113,9 +113,9 @@
                         {% if pagination|length > 0 %}
                             {% for portfolio in pagination %}
                                 {% set portfolioSummary = combined.portfolioSummaries[portfolio.id] ?? null %}
-                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="grid grid-cols-5 gap-4 px-4 py-4 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]">
+                                <a href="{{ path('app_portfolio_show', {'id': portfolio.id}) }}" class="grid gap-4 px-4 py-4 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]" style="grid-template-columns: 1fr 1.2fr 0.6fr 0.5fr auto;">
                                     <div class="text-white font-medium">{{ portfolio.name }}</div>
-                                    <div class="text-white">{{ portfolioSummary ? portfolioSummary.totalValue|format_price : '$0.00' }}</div>
+                                    <div class="text-white">{{ portfolioSummary ? portfolioSummary.totalValue|format_value_short : '$0.00' }}</div>
                                     <div>
                                         {% if portfolioSummary %}
                                             <span class="{% if portfolioSummary.profitLossPercent >= 0 %}text-green-500{% else %}text-red-500{% endif %}">
@@ -149,7 +149,7 @@
                     </div>
 
                     <!-- Mobile Table -->
-                    <div class="md:hidden grid gap-x-2 gap-y-0 px-1" style="grid-template-columns: min-content 1fr 1fr 1fr;">
+                    <div class="md:hidden grid gap-x-2 gap-y-0 px-1 min-w-0 overflow-hidden" style="grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.15fr) minmax(0, 0.55fr) minmax(0, 0.5fr);">
                         <!-- Header row -->
                         <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary flex items-center min-w-0">
                             {{ knp_pagination_sortable(pagination, 'Name', 'p.name', { class: 'inline-flex items-center gap-1 cursor-pointer truncate' }, [], 'components/_sortable_link.html.twig') }}

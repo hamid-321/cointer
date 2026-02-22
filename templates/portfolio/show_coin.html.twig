@@ -107,9 +107,9 @@
                                         {{ transaction.type|capitalize }}
                                     </span>
                                 </div>
-                                <div class="text-white">{{ transaction.quantity|format_quantity }}</div>
+                                <div class="text-white text-left">{{ transaction.quantity|format_holdings }}</div>
                                 <div class="text-white">{{ (transaction.price / transaction.quantity)|format_price }}</div>
-                                <div class="text-white">{{ transaction.price|format_price }}</div>
+                                <div class="text-white text-left">{{ transaction.price|format_price }}</div>
                                 <div class="text-gray-400">{{ transaction.createdAt|format_date(false) }}</div>
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': transaction.id}) }}" class="px-2 py-1 text-xs font-medium bg-slate-500/20 text-slate-300 hover:bg-slate-500/30 border border-slate-500/50 rounded transition-colors">
@@ -127,10 +127,10 @@
                         <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary flex items-center">
                             {{ knp_pagination_sortable(pagination, 'Type', 't.type', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
-                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-left min-w-0 flex items-center justify-start">
                             {{ knp_pagination_sortable(pagination, 'Amount', 't.quantity', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
-                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-right min-w-0 flex items-center justify-end">
+                        <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors py-2 border-b border-primary text-left min-w-0 flex items-center justify-start">
                             {{ knp_pagination_sortable(pagination, 'Value', 't.price', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
                         <div class="py-2 border-b border-primary"></div>
@@ -144,8 +144,8 @@
                                     {{ transaction.type|capitalize }}
                                 </span>
                             </div>
-                            <div class="text-white text-sm text-right py-2 border-b border-primary min-w-0 flex items-center justify-end">{{ transaction.quantity|format_quantity }}</div>
-                            <div class="text-white text-sm text-right py-2 border-b border-primary min-w-0 flex items-center justify-end">{{ (transaction.price)|format_price }}</div>
+                            <div class="text-white text-sm text-left py-2 border-b border-primary min-w-0 flex items-center justify-start">{{ transaction.quantity|format_holdings }}</div>
+                            <div class="text-white text-sm text-left py-2 border-b border-primary min-w-0 flex items-center justify-start">{{ (transaction.price)|format_price }}</div>
                             <div class="py-2 border-b border-primary flex items-center justify-end gap-2">
                                 <a href="{{ path('app_transaction_edit', {'id': portfolio.id, 'transactionId': transaction.id}) }}" class="px-2 py-1 text-xs font-medium bg-slate-500/20 text-slate-300 hover:bg-slate-500/30 border border-slate-500/50 rounded transition-colors">
                                     Edit

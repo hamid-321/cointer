@@ -24,7 +24,7 @@ class PortfolioType extends AbstractType
                     ]),
                     new Length([
                         'min' => 1,
-                        'max' => 255,
+                        'max' => 10,
                         'maxMessage' => 'Portfolio name cannot be longer than {{ limit }} characters',
                     ]),
                 ],

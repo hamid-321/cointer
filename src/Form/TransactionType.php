@@ -47,7 +47,7 @@ class TransactionType extends AbstractType
                         'message' => 'Quantity cannot be negative.',
                     ]),
                     new Range([
-                        'min' => 1,
+                        'min' => 0.00000001,
                         'max' => 99999999.99999999,
                         'notInRangeMessage' => 'Quantity must be between {{ min }} and {{ max }}.',
                     ]),
