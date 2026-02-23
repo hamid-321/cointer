@@ -1,3 +1,6 @@
+{% if options.href is defined %}
+    {% set options = options|merge({ 'href': options.href ~ '#sortable-content' }) %}
+{% endif %}
 <a{% for attr, value in options %} {{ attr }}="{{ value }}"{% endfor %}>
     {{- title -}}
     {% if sorted %}
