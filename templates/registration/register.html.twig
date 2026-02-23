@@ -9,6 +9,10 @@
             <div class="bg-card shadow rounded-lg p-6 max-h-full overflow-auto">
                 <h1 class="text-2xl font-semibold text-white mb-6 text-center">Create your account</h1>
 
+                <a href="{{ path('connect_google_start') }}" class="w-full inline-flex items-center justify-center rounded-md border border-gray-600 bg-primary px-4 py-2 mb-2 text-white font-medium shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
+                    Register with Google
+                </a>
+                <p class="text-center text-gray-400 text-md">or</p>
                 {{ form_errors(registrationForm) }}
 
                 {{ form_start(registrationForm, { attr: { class: 'space-y-5' } }) }}

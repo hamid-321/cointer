@@ -9,6 +9,10 @@
             <div class="bg-card shadow rounded-lg p-6 max-h-full overflow-auto">
                 <h1 class="text-2xl font-semibold text-white mb-6 text-center">Please sign in</h1>
 
+                <a href="{{ path('connect_google_start') }}" class="w-full inline-flex items-center justify-center rounded-md border border-gray-600 bg-primary px-4 py-2 mb-2 text-white font-medium shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
+                    Sign in with Google
+                </a>
+                <p class="text-center text-gray-400 text-md">or</p>
                 {% if error %}
                     <div class="mb-4 rounded border border-red-400 bg-red-500/20 text-red-400 px-4 py-3 text-sm">
                         {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -47,6 +51,10 @@
                     <button type="submit" class="w-full inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-white font-medium shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent">
                         Sign in
                     </button>
+
+                    <a href="{{ path('app_register') }}" class="w-full inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-white font-medium shadow-sm hover:opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent">
+                        New User? Sign up
+                    </a>
                 </form>
             </div>
         </div>

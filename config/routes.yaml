@@ -16,3 +16,10 @@ home:
     defaults:
         route: app_coin_index
         permanent: false
+
+connect_google_check:
+    path: /connect/google/check
+
+connect_google_start:
+    path: /connect/google
+    controller: App\Controller\GoogleAuthenticatorController::connectAction
