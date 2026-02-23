@@ -89,7 +89,7 @@
                 <!--  MOBILE VIEW  -->
                 <div class="md:hidden">
                     <!-- Mobile Table Header -->
-                    <div class="grid grid-cols-4 gap-2 px-1 pb-2 border-b border-primary">
+                    <div class="grid gap-2 px-1 pb-2 border-b border-primary" style="grid-template-columns: 0.95fr 1.05fr 0.8fr 1.2fr;">
                         <div class="text-gray-400 text-xs font-medium hover:text-white transition-colors">
                             {{ knp_pagination_sortable(pagination, 'Name', 'c.name', { class: 'inline-flex items-center gap-1 cursor-pointer' }, [], 'components/_sortable_link.html.twig') }}
                         </div>
@@ -107,7 +107,7 @@
                     <!-- Mobile Coin List -->
                     {% for coin in pagination %}
                         <a href="{{ path('app_coin_show', {'id': coin.id}) }}" 
-                           class="grid grid-cols-4 px-1 py-2 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]">
+                           class="grid px-1 py-2 items-center border-b border-primary transition-colors hover:bg-[#2a2f3d]" style="grid-template-columns: 0.95fr 1.05fr 0.8fr 1.2fr;">
                             <div class="min-w-0">
                                 <div class="text-white text-sm font-medium truncate">{{ coin.name }}</div>
                                 <div class="text-gray-400 text-xs uppercase">{{ coin.symbol }}</div>
