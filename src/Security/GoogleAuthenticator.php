@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
@@ -24,7 +25,8 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
         private ClientRegistry $clientRegistry,
-        private RouterInterface $router
+        private RouterInterface $router,
+        private UserPasswordHasherInterface $userPasswordHasher
     ) {}
 
     public function supports(Request $request): ?bool
@@ -50,7 +52,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                     $user = new User();
                     $user->setEmail($email);
                     $user->setDisplayName($googleUser->getFirstName() ?? 'Anonymous');
-                    $user->setPassword(bin2hex(random_bytes(16)));
+                    $user->setPassword($this->userPasswordHasher->hashPassword($user, bin2hex(random_bytes(16))));
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
                 }
