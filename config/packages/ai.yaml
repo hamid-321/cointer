@@ -1,0 +1,29 @@
+ai:
+    platform:
+        # Inference Platform configuration
+        # see https://github.com/symfony/ai/tree/main/src/platform#platform-bridges
+
+        # openai:
+        #    api_key: '%env(OPENAI_API_KEY)%'
+
+    agent:
+        # Agent configuration
+        # see https://symfony.com/doc/current/ai/bundles/ai-bundle.html
+
+        default:
+            platform: 'ai.platform.gemini'
+            model: 'gemini-2.5-flash-lite'
+            prompt: |
+                You are a helpful, concise crypto assistant for the Cointer website. Answer generic crypto questions simply. |
+                Do not provide any financial advice."
+
+            tools:
+                - 'App\Service\Ai\PortfolioTool'
+
+    store:
+        # Store configuration
+
+        # chromadb:
+        #    default:
+        #        client: 'client.service.id'
+        #        collection: 'my_collection'

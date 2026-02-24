@@ -1,16 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller {
+export default class extends Controller
+{
     static targets = ['backdrop', 'message'];
 
-    connect() {
+    connect()
+    {
         this.formToSubmit = null;
     }
 
     /**
      * Opens the modal and populates
      */
-    open(event) {
+    open(event)
+    {
         event.preventDefault();
         event.stopPropagation();
         const button = event.currentTarget;
@@ -23,18 +26,22 @@ export default class extends Controller {
         document.body.style.overflow = 'hidden';
     }
 
-    close() {
+    close()
+    {
         this.backdropTarget.classList.add('hidden');
         document.body.style.overflow = '';
         this.formToSubmit = null;
     }
 
-    stopPropagation(event) {
+    stopPropagation(event)
+    {
         event.stopPropagation();
     }
 
-    confirm() {
-        if (this.formToSubmit) {
+    confirm()
+    {
+        if (this.formToSubmit)
+        {
             this.formToSubmit.submit();
         }
         this.close();
