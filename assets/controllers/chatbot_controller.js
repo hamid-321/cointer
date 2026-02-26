@@ -25,11 +25,20 @@ export default class extends Controller
         this.appendMessage('user', msg);
         this.inputTarget.value = '';
 
+        const history = [];
+        this.messagesTarget.querySelectorAll('.w-fit').forEach(el => {
+            const isUser = el.classList.contains('bg-purple-500/20');
+            history.push({
+                role: isUser ? 'user' : 'assistant',
+                content: el.textContent.trim()
+            });
+        });
+
         const response = await fetch('/chatbot',
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: msg }),
+            body: JSON.stringify({ message: msg, history: history }),
             credentials: 'include'
         });
 

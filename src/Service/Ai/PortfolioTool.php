@@ -42,9 +42,10 @@ class PortfolioTool
         }
 
 
-        $holdings = [];
+        $portfolioSummaries = [];
         foreach ($summary['portfolioSummaries'] as $portfolioId => $portfolioSummary) 
         {
+            $holdings = [];
             foreach ($portfolioSummary['holdings'] as $holding)
             {
                 $holdings[] = [

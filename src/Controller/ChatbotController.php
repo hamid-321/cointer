@@ -10,12 +10,14 @@ use Symfony\AI\Agent\AgentInterface;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\Ai\PortfolioTool;
 
 class ChatbotController extends AbstractController
 {
     public function __construct(
         #[Autowire(service: 'ai.agent.default')]
-        private readonly AgentInterface $agent
+        private readonly AgentInterface $agent,
+        private readonly PortfolioTool $portfolioTool
     ) {
     }
 
@@ -24,8 +26,25 @@ class ChatbotController extends AbstractController
     {
         $payload = $request->toArray();
         $userText = $payload['message'] ?? '';
+        $history = $payload['history'] ?? [];
 
-        $messages = new MessageBag(Message::ofUser($userText));
+        $portfolioData = $this->portfolioTool->__invoke();
+        $portfolioDataForPrompt = "User's current crypto portfolio data: " . json_encode($portfolioData);
+
+        $messages = new MessageBag(Message::forSystem(
+            "You are Cointer Assistant. $portfolioDataForPrompt. Use this info to answer questions directly."));
+
+        foreach ($history as $message) {
+            if ($message['role'] === 'user') 
+            {
+                $messages->add(Message::ofUser($message['content']));
+            } 
+            else
+            {
+                $messages->add(Message::ofAssistant($message['content']));
+            }
+        }
+
         $result = $this->agent->call($messages);
 
         return new JsonResponse(['response' => (string) $result->getContent()]);
