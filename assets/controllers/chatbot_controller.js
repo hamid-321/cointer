@@ -3,6 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller 
 {
     static targets = ["window", "input", "messages"]
+    static values = { csrfToken: String }
 
     toggle()
     {
@@ -37,7 +38,10 @@ export default class extends Controller
         const response = await fetch('/chatbot',
         {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': this.csrfTokenValue
+            },
             body: JSON.stringify({ message: msg, history: history }),
             credentials: 'include'
         });

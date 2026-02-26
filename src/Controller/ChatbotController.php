@@ -24,6 +24,10 @@ class ChatbotController extends AbstractController
     #[Route('/chatbot', name: 'app_chatbot', methods: ['POST'])]
     public function index(Request $request): JsonResponse
     {
+        if (!$this->isCsrfTokenValid('chatbot', $request->headers->get('X-CSRF-Token'))) {
+            return new JsonResponse(['response' => 'Invalid security token. Please refresh the page.'], 403);
+        }
+
         $payload = $request->toArray();
         $userText = $payload['message'] ?? '';
         $history = $payload['history'] ?? [];
