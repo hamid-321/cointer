@@ -19,7 +19,7 @@
             <main class="flex-1 flex flex-col">
                 {% for type, messages in app.flashes(['success', 'notice', 'error']) %}
                     {% for message in messages %}
-                        <div class="max-w-7xl mx-auto px-4 mt-4 md:px-8">
+                        <div class="max-w-7xl mx-auto px-4 mt-4 lg:px-8">
                             <div class="px-4 py-3 rounded-lg {{ type == 'error' ? 'text-white border border-red-500/50' : (type == 'notice' ? 'text-white border border-amber-500/50' : 'text-white border border-green-500/50') }}">
                                 {{ message }}
                             </div>
