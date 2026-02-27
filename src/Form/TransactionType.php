@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use App\Form\CoinAutoCompleteField;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TransactionType extends AbstractType
 {
@@ -37,19 +38,20 @@ class TransactionType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Type to search',
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Coin is required.',
+                    ]),
+                ],
             ])
             ->add('quantity', NumberType::class, [
                 'scale' => 8,
                 'attr' => ['step' => 'any'],
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => 'Quantity cannot be negative.',
-                    ]),
                     new Range([
                         'min' => 0.00000001,
                         'max' => 99999999.99999999,
-                        'notInRangeMessage' => 'Quantity must be between {{ min }} and {{ max }}.',
+                        'notInRangeMessage' => 'Quantity must be greater than 0 and less than {{ max }}.',
                     ]),
                     new Callback(function ($quantity, ExecutionContextInterface $context) use ($holdingsByCoin, $quantityFormatter): void {
                         $transaction = $context->getRoot()->getData();
