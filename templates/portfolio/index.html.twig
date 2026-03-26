@@ -78,7 +78,7 @@
                             <input type="text" name="q" value="{{ searchTerm }}" placeholder="Search portfolios by name..."
                                 class="w-full lg:w-auto lg:min-w-[200px] flex-1 bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-accent">
                             <div class="flex gap-2">
-                                <button type="submit" class="flex-1 lg:flex-none bg-accent px-4 py-2 rounded-lg text-white font-medium hover:bg-purple-600 transition-colors">
+                                <button type="submit" class="flex-1 lg:flex-none bg-accent px-4 py-2 rounded-lg text-white font-medium hover:bg-purple-600 transition-colors" aria-label="Search portfolios">
                                     Search
                                 </button>
                                 {% if searchTerm %}

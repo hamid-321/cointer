@@ -2,12 +2,15 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller 
 {
-    static targets = ["window", "input", "messages"]
+    static targets = ["window", "input", "messages", "toggle"]
     static values = { csrfToken: String }
 
     toggle()
     {
         this.windowTarget.classList.toggle('hidden');
+        const expanded = !this.windowTarget.classList.contains('hidden');
+        this.toggleTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        this.toggleTarget.setAttribute('aria-label', expanded ? 'Close Cointer Assistant chat' : 'Open Cointer Assistant chat');
     }
 
     sendOnEnter(event)
