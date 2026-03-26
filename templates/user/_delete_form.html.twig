@@ -1,6 +1,6 @@
 <form method="post" action="{{ path('app_user_delete') }}" class="inline">
     <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
-    <button type="button" class="px-2 py-1 text-s font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 rounded transition-colors" data-action="click->confirm#open" data-confirm-message="Are you sure you want to delete your account?">
+    <button type="button" class="px-2 py-1 text-s font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 rounded transition-colors" data-action="click->confirm#open" data-confirm-message="Are you sure you want to delete your account?" aria-label="Delete your account">
         <span>Delete Account</span>
     </button>
 </form>

@@ -23,8 +23,8 @@
         </div>
 
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button type="button" id="mobile-menu-btn" class="lg:hidden text-white p-2" aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
         </button>
@@ -51,7 +51,13 @@
 </nav>
 
 <script>
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-        document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
+    (function () {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', function () {
+            menu.classList.toggle('hidden');
+            const expanded = !menu.classList.contains('hidden');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    })();
 </script>

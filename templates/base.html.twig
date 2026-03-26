@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale|default('en') }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,10 +33,10 @@
         {% include 'components/_confirm_modal.html.twig' %}
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <div class="fixed bottom-7 right-7 z-50" data-controller="chatbot" data-chatbot-csrf-token-value="{{ csrf_token('chatbot') }}">
-                <button data-action="click->chatbot#toggle" class="bg-card p-4 rounded-full shadow-xl hover:scale-105 transition-all border border-white/10 hover:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50" aria-label="Open chatbot">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white"> <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg>
+                <button type="button" data-chatbot-target="toggle" data-action="click->chatbot#toggle" class="bg-card p-4 rounded-full shadow-xl hover:scale-105 transition-all border border-white/10 hover:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50" aria-controls="cointer-chatbot-panel" aria-expanded="false" aria-label="Open Cointer Assistant chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white" aria-hidden="true" focusable="false"> <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg>
                 </button>
-                <div data-chatbot-target="window" class="hidden absolute bottom-20 right-0 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden bg-card border border-white/10">
+                <div id="cointer-chatbot-panel" data-chatbot-target="window" class="hidden absolute bottom-20 right-0 w-80 rounded-2xl shadow-2xl flex flex-col overflow-hidden bg-card border border-white/10" role="region" aria-label="Cointer Assistant chat">
                     <div class="px-4 py-3 border-b border-primary">
                         <span class="text-white font-semibold text-sm">Cointer Assistant</span>
                         <p class="text-gray-400 text-S mt-0.5">Ask me anything about crypto, this is not financial advice.</p>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="p-3 border-t border-primary bg-card flex gap-2 items-center">
                         <input data-chatbot-target="input" type="text" placeholder="Type your message..." data-action="keydown.enter->chatbot#sendOnEnter" class="flex-1 min-w-0 rounded-lg border border-gray-600 bg-primary px-3 py-2 text-white text-sm placeholder-gray-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent">
-                        <button data-action="click->chatbot#send" type="button" class="shrink-0 bg-accent hover:opacity-90 text-white font-medium px-4 py-2 rounded-lg transition-opacity">Send</button>
+                        <button type="button" data-action="click->chatbot#send" class="shrink-0 bg-accent hover:opacity-90 text-white font-medium px-4 py-2 rounded-lg transition-opacity" aria-label="Send chat message">Send</button>
                     </div>
                 </div>
             </div>
