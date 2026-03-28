@@ -18,33 +18,35 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'empty_data' => '',
                 'attr' => ['autocomplete' => 'email'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter an email address',
-                    ]),
-                    new Email([
-                        'message' => 'Please enter a valid email address',
-                    ]),
-                    new Length([
-                        'max' => 180,
-                        'maxMessage' => 'Email cannot be longer than {{ limit }} characters',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter an email address',
+                    ),
+                    new Email(
+                        message: 'Please enter a valid email address',
+                    ),
+                    new Length(
+                        max: 180,
+                        maxMessage: 'Email cannot be longer than {{ limit }} characters',
+                    ),
                 ],
             ])
             ->add('displayName', TextType::class, [
                 'label' => 'Display Name',
+                'empty_data' => '',
                 'attr' => ['autocomplete' => 'name'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a display name',
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Display name must be at least {{ limit }} characters',
-                        'max' => 30,
-                        'maxMessage' => 'Display name cannot be longer than {{ limit }} characters',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter a display name',
+                    ),
+                    new Length(
+                        min: 2,
+                        minMessage: 'Display name must be at least {{ limit }} characters',
+                        max: 30,
+                        maxMessage: 'Display name cannot be longer than {{ limit }} characters',
+                    ),
                 ],
             ])
         ;

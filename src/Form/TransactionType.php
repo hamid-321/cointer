@@ -39,20 +39,20 @@ class TransactionType extends AbstractType
                     'placeholder' => 'Type to search',
                 ],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Coin is required.',
-                    ]),
+                    new NotBlank(
+                        message: 'Coin is required.',
+                    ),
                 ],
             ])
             ->add('quantity', NumberType::class, [
                 'scale' => 8,
                 'attr' => ['step' => 'any'],
                 'constraints' => [
-                    new Range([
-                        'min' => 0.00000001,
-                        'max' => 99999999.99999999,
-                        'notInRangeMessage' => 'Quantity must be greater than 0 and less than {{ max }}.',
-                    ]),
+                    new Range(
+                        min: 0.00000001,
+                        max: 99999999.99999999,
+                        notInRangeMessage: 'Quantity must be greater than 0 and less than {{ max }}.',
+                    ),
                     new Callback(function ($quantity, ExecutionContextInterface $context) use ($holdingsByCoin, $quantityFormatter): void {
                         $transaction = $context->getRoot()->getData();
                         if (!$transaction instanceof Transaction || $transaction->getType() !== 'sell') 
@@ -91,30 +91,30 @@ class TransactionType extends AbstractType
                 'attr' => ['step' => 'any'],
                 'data' => $options['price_per_coin'],
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => 'Price per coin cannot be negative.',
-                    ]),
-                    new Range([
-                        'min' => 0,
-                        'max' => 999999999.999999999,
-                        'notInRangeMessage' => 'Price per coin must be between {{ min }} and {{ max }}.',
-                    ]),
+                    new GreaterThanOrEqual(
+                        value: 0,
+                        message: 'Price per coin cannot be negative.',
+                    ),
+                    new Range(
+                        min: 0,
+                        max: 999999999.999999999,
+                        notInRangeMessage: 'Price per coin must be between {{ min }} and {{ max }}.',
+                    ),
                 ],
             ])
             ->add('price', NumberType::class, [
                 'scale' => 10,
                 'attr' => ['step' => 'any'],
                 'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => 'Price cannot be negative.',
-                    ]),
-                    new Range([
-                        'min' => 0,
-                        'max' => 999999999.99999999,
-                        'notInRangeMessage' => 'Total value must be between {{ min }} and {{ max }}.',
-                    ]),
+                    new GreaterThanOrEqual(
+                        value: 0,
+                        message: 'Price cannot be negative.',
+                    ),
+                    new Range(
+                        min: 0,
+                        max: 999999999.99999999,
+                        notInRangeMessage: 'Total value must be between {{ min }} and {{ max }}.',
+                    ),
                 ],
             ])
             ->add('createdAt', DateType::class, [

@@ -18,15 +18,15 @@ class PortfolioType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Portfolio Name',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a portfolio name',
-                        'normalizer' => 'trim',
-                    ]),
-                    new Length([
-                        'min' => 1,
-                        'max' => 10,
-                        'maxMessage' => 'Portfolio name cannot be longer than {{ limit }} characters',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter a portfolio name',
+                        normalizer: 'trim',
+                    ),
+                    new Length(
+                        min: 1,
+                        max: 10,
+                        maxMessage: 'Portfolio name cannot be longer than {{ limit }} characters',
+                    ),
                 ],
             ])
         ;
