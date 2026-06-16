@@ -20,9 +20,9 @@ class ChangePasswordType extends AbstractType
             ->add('current_password', PasswordType::class, [
                 'mapped' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your current password',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter your current password',
+                    ),
                 ],
             ])
             ->add('new_password', RepeatedType::class, [
@@ -33,36 +33,36 @@ class ChangePasswordType extends AbstractType
                     'label' => 'New password',
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please enter a new password',
-                        ]),
+                        new NotBlank(
+                            message: 'Please enter a new password',
+                        ),
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Confirm new password',
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please confirm your new password',
-                        ]),
-                        new Length([
-                            'min' => 8,
-                            'minMessage' => 'Your password must be at least {{ limit }} characters.',
-                            'max' => 128,
-                            'maxMessage' => 'Your password must be at most {{ limit }} characters.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[A-Z]/',
-                            'message' => 'Your password must contain at least one uppercase letter.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[0-9]/',
-                            'message' => 'Your password must contain at least one number.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[^a-zA-Z0-9]/',
-                            'message' => 'Your password must contain at least one special character.',
-                        ]),
+                        new NotBlank(
+                            message: 'Please confirm your new password',
+                        ),
+                        new Length(
+                            min: 8,
+                            minMessage: 'Your password must be at least {{ limit }} characters.',
+                            max: 128,
+                            maxMessage: 'Your password must be at most {{ limit }} characters.',
+                        ),
+                        new Regex(
+                            pattern: '/[A-Z]/',
+                            message: 'Your password must contain at least one uppercase letter.',
+                        ),
+                        new Regex(
+                            pattern: '/[0-9]/',
+                            message: 'Your password must contain at least one number.',
+                        ),
+                        new Regex(
+                            pattern: '/[^a-zA-Z0-9]/',
+                            message: 'Your password must contain at least one special character.',
+                        ),
                     ],
                 ],
             ])

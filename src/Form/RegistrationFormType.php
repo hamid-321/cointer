@@ -23,31 +23,31 @@ class RegistrationFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'attr' => ['autocomplete' => 'email'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter an email address',
-                    ]),
-                    new Email([
-                        'message' => 'Please enter a valid email address',
-                    ]),
-                    new Length([
-                        'max' => 180,
-                        'maxMessage' => 'Email cannot be longer than {{ limit }} characters',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter an email address',
+                    ),
+                    new Email(
+                        message: 'Please enter a valid email address',
+                    ),
+                    new Length(
+                        max: 180,
+                        maxMessage: 'Email cannot be longer than {{ limit }} characters',
+                    ),
                 ],
             ])
             ->add('displayName', TextType::class, [
                 'label' => 'Display Name',
                 'attr' => ['autocomplete' => 'name'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a display name',
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Display name must be at least {{ limit }} characters',
-                        'max' => 30,
-                        'maxMessage' => 'Display name cannot be longer than {{ limit }} characters',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter a display name',
+                    ),
+                    new Length(
+                        min: 2,
+                        minMessage: 'Display name must be at least {{ limit }} characters',
+                        max: 30,
+                        maxMessage: 'Display name cannot be longer than {{ limit }} characters',
+                    ),
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -58,36 +58,36 @@ class RegistrationFormType extends AbstractType
                     'label' => 'Password',
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please enter a password',
-                        ]),
+                        new NotBlank(
+                            message: 'Please enter a password',
+                        ),
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Repeat Password',
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please confirm your password',
-                        ]),
-                        new Length([
-                            'min' => 8,
-                            'minMessage' => 'Your password must be at least {{ limit }} characters.',
-                            'max' => 128,
-                            'maxMessage' => 'Your password must be at most {{ limit }} characters.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[A-Z]/',
-                            'message' => 'Your password must contain at least one uppercase letter.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[0-9]/',
-                            'message' => 'Your password must contain at least one number.',
-                        ]),
-                        new Regex([
-                            'pattern' => '/[^a-zA-Z0-9]/',
-                            'message' => 'Your password must contain at least one special character.',
-                        ]),
+                        new NotBlank(
+                            message: 'Please confirm your password',
+                        ),
+                        new Length(
+                            min: 8,
+                            minMessage: 'Your password must be at least {{ limit }} characters.',
+                            max: 128,
+                            maxMessage: 'Your password must be at most {{ limit }} characters.',
+                        ),
+                        new Regex(
+                            pattern: '/[A-Z]/',
+                            message: 'Your password must contain at least one uppercase letter.',
+                        ),
+                        new Regex(
+                            pattern: '/[0-9]/',
+                            message: 'Your password must contain at least one number.',
+                        ),
+                        new Regex(
+                            pattern: '/[^a-zA-Z0-9]/',
+                            message: 'Your password must contain at least one special character.',
+                        ),
                     ],
                 ],
             ])

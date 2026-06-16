@@ -1,6 +1,6 @@
 <form method="post" action="{{ path('app_portfolio_delete', {'id': portfolio.id}) }}" class="inline">
     <input type="hidden" name="_token" value="{{ csrf_token('delete-portfolio-' ~ portfolio.id) }}">
-    <button type="button" class="px-2 py-1 text-s font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 rounded transition-colors" data-action="click->confirm#open" data-confirm-message="Are you sure you want to delete this portfolio?">
+    <button type="button" class="px-2 py-1 text-s font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 rounded transition-colors" data-action="click->confirm#open" data-confirm-message="Are you sure you want to delete this portfolio?" aria-label="Delete this portfolio">
         <span class="sm:hidden">Delete</span><span class="hidden sm:inline">Delete Portfolio</span>
     </button>
 </form>
